@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1071573842563",
+    "project_id": "jtalk-23e13",
+    "storage_bucket": "jtalk-23e13.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1071573842563:android:0a0d503bc498244065f9b6",
+        "android_client_info": {
+          "package_name": "com.example.jtalk"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1071573842563-gj7l48lvq3vmleglv8j5nlg6ms3isleg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCiYXWu8C-UJB7R-2PQdZcL0mM5mSnyMhc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1071573842563-gj7l48lvq3vmleglv8j5nlg6ms3isleg.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
