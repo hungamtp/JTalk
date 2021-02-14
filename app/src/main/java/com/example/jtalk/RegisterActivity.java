@@ -36,6 +36,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
+
         mAuth = FirebaseAuth.getInstance();
 
         username = findViewById(R.id.username);
@@ -126,22 +127,21 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if(task.isSuccessful()){
-
-                    User newUser = new User(emailstr   , usernamestr , passwordstr);
-                    FirebaseDatabase.getInstance().getReference("Users").
-                            child(FirebaseAuth.getInstance().getCurrentUser().getUid()).
-                            setValue(newUser).addOnCompleteListener(new OnCompleteListener<Void>() {
-
+                    User newUser = new User(emailstr   , usernamestr , passwordstr , false , false );
+                    FirebaseDatabase.getInstance().getReference("Users")
+                            .child(usernamestr)
+                            .setValue(newUser)
+                            .addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
                             if(task.isSuccessful()){
                                 Toast.makeText(RegisterActivity.this , "Oke" , Toast.LENGTH_LONG).show();
                                 startActivity(new Intent(RegisterActivity.this , LoginActivity.class));
+                                finish();
                             }
                         }
 
                     });
-
                 }
                 else{
                     email.setError("Email existed");

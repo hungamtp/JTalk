@@ -33,24 +33,16 @@
         android:layout_gravity="center"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
-    <RelativeLayout
-        android:layout_marginTop="15dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
-        <Button
-            android:id="@+id/btnAddfriend"
-            android:layout_alignParentStart="true"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/add_friend"
-            android:layout_alignParentLeft="true" />
+
         <Button
             android:id="@+id/btnText"
             android:text="@string/text"
+            android:layout_marginTop="15dp"
+            android:layout_gravity="center"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true" />
-    </RelativeLayout>
+
 
 
 </LinearLayout>

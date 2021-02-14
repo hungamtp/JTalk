@@ -6,17 +6,29 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".MainActivity">
-
+<LinearLayout
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <ImageView
+        android:id="@+id/avatar"
+        android:src="@drawable/ic_launcher_foreground"
+        android:layout_gravity="right"
+        android:layout_width="50dp"
+        android:layout_height="50dp"/>
+</LinearLayout>
     <LinearLayout
+
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
         <EditText
             android:id="@+id/name"
-            android:layout_width="wrap_content"
+            android:layout_width="200dp"
             android:layout_height="wrap_content"/>
         <Button
             android:id="@+id/btnSearch"
+            android:text="@string/search"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
     </LinearLayout>

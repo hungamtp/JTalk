@@ -2,6 +2,7 @@ package com.example.jtalk.model;
 
 public class Message {
     public String receiver , sender , message;
+    public boolean isSender;
 
 
     public Message(){
@@ -9,10 +10,11 @@ public class Message {
     }
 
 
-    public Message(String receiver, String sender, String message) {
+    public Message(String sender, String receiver, String message , boolean isSender) {
         this.receiver = receiver;
         this.sender = sender;
         this.message = message;
+        this.isSender = isSender;
     }
 
     public String getReceiver() {

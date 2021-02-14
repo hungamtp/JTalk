@@ -42,8 +42,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         password = findViewById(R.id.password);
 
         firebaseAuth = FirebaseAuth.getInstance();
+        // auto log
+//        username.setText("hungamtp");
+//        password.setText("hunghung");
+//        btLogin.callOnClick();
 
-
+        
     }
 
     @Override
@@ -73,9 +77,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
                             if(snapshot.exists()){
                                 Intent intent = new Intent();
-                                databaseReference.child("Users").child(username.getText().toString()).child("online").setValue("true");
+                                databaseReference.child("Users").child(username.getText().toString()).child("online").setValue(true);
+                                intent.putExtra("username" , username.getText().toString()) ;
                                 intent.setClass(LoginActivity.this , MainActivity.class);
                                 startActivity(intent);
+
                             }else{
                                 password.setError("wrong password");
                             }
@@ -103,5 +109,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     }
 
-
+    @Override
+    protected void onPause() {
+        super.onPause();
+        finish();
+    }
 }
