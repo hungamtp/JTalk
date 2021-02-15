@@ -3,27 +3,22 @@ package com.example.jtalk;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
+import com.bumptech.glide.Glide;
 import android.app.Dialog;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import com.example.jtalk.adapter.FriendListAdapter;
 import com.example.jtalk.model.User;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -31,14 +26,10 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
+
 
 public class MainActivity extends AppCompatActivity {
     RecyclerView friendListView;
@@ -50,7 +41,6 @@ public class MainActivity extends AppCompatActivity {
     Dialog searchFriendDialog;
     String username;
     ImageView avatar;
-    boolean isFound = false;
     StorageReference storageReference;
 
     @Override
@@ -61,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
         initView();
         Intent intent = getIntent();
         username = intent.getStringExtra("username");
-
+        loadAvatar();
 
         // fecth data to recycle view
         databaseReference.child("Users").child(username).child("friends").addChildEventListener(new ChildEventListener() {
@@ -220,6 +210,7 @@ public class MainActivity extends AppCompatActivity {
         friendList = new ArrayList<>();
         friendListAdapter = new FriendListAdapter(friendList);
         friendListView.setLayoutManager(new LinearLayoutManager(this));
+        friendListView.addItemDecoration(new DividerItemDecoration(this, 0));
         friendListView.setAdapter(friendListAdapter);
         searchFriendDialog = new Dialog(this);
         storageReference = FirebaseStorage.getInstance().getReference();
@@ -230,9 +221,36 @@ public class MainActivity extends AppCompatActivity {
     private void addFriend(String currentUsername, String friendUsername) {
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
         databaseReference.child("Users").child(currentUsername).child("friends").push().setValue(friendUsername);
-        databaseReference.child("Users").child(friendUsername).child("friends").push().setValue(username);
+        databaseReference.child("Users").child(friendUsername).child("friends").push().setValue(currentUsername);
     }
 
+
+    void loadAvatar() {
+        // check avatar exist
+        databaseReference.child("Users").child(username).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    User userProfile = snapshot.getValue(User.class);
+                    if (!userProfile.avatar.equals("")) {
+                       Glide.with(MainActivity.this).load(userProfile.avatar).into(avatar);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        loadAvatar();
+
+    }
 }
 
 

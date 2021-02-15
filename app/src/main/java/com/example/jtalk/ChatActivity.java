@@ -3,12 +3,15 @@ package com.example.jtalk;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.DividerItemDecoration;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -33,6 +36,7 @@ public class ChatActivity extends AppCompatActivity {
     MessageAdapter messageAdapter;
     Button btnSend;
     EditText message;
+    ImageView back;
     DatabaseReference databaseReference;
     TextView friendName;
     @Override
@@ -85,6 +89,13 @@ public class ChatActivity extends AppCompatActivity {
                 messageAdapter.notifyDataSetChanged();
             }
         });
+
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
     }
 
     void initView(){
@@ -92,8 +103,10 @@ public class ChatActivity extends AppCompatActivity {
         sender = intent.getStringExtra("sender");
         receiver = intent.getStringExtra("receiver");
         messagesList = new ArrayList<>();
+        back = findViewById(R.id.back);
         messageAdapter = new MessageAdapter(messagesList);
         messageListView = findViewById(R.id.messageListView);
+
         messageListView.setAdapter(messageAdapter);
         btnSend = findViewById(R.id.btnSend);
         message = findViewById(R.id.message);

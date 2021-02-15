@@ -1,31 +1,19 @@
 package com.example.jtalk.adapter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
+import com.bumptech.glide.Glide;
 import com.example.jtalk.ChatActivity;
-import com.example.jtalk.MainActivity;
 import com.example.jtalk.R;
 import com.example.jtalk.model.User;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.storage.FileDownloadTask;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
-
-import java.io.File;
-import java.io.IOException;
 import java.util.List;
 
 public class FriendListAdapter extends RecyclerView.Adapter<FriendListAdapter.ViewHolder> {
@@ -50,32 +38,19 @@ public class FriendListAdapter extends RecyclerView.Adapter<FriendListAdapter.Vi
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         User user =  friendList.get(position);
-
-
         holder.username.setText(user.username);
+
         if(user.online){
+            // set image when is online
             holder.online.setImageResource(R.drawable.ic_launcher_background);
         }else {
+            // set image when is offline
             holder.online.setImageResource(R.drawable.ic_baseline_arrow_back_24);
         }
-        StorageReference storageReference = FirebaseStorage.getInstance().getReference();
-        storageReference.child("avatar/"+user.username+".jpg");
-        if (user.avatar) {
-            storageReference = FirebaseStorage.getInstance().getReference().child("avatar/" + user.username + ".jpg");
-            try {
-                final File localFile = File.createTempFile(user.username, ".jpg");
-                storageReference.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
-                    @Override
-                    public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                        Bitmap bitmap = BitmapFactory.decodeFile(localFile.getAbsolutePath());
-                        holder.avatar.setImageBitmap(bitmap);
-
-                    }
-                });
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
+//
+        if (!user.avatar.equals("")) {
+            // set avatar
+            Glide.with(holder.avatar.getContext()).load(user.avatar).into(holder.avatar);
         }
 
 
@@ -101,9 +76,10 @@ public class FriendListAdapter extends RecyclerView.Adapter<FriendListAdapter.Vi
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent();
+                    Intent intent = ((Activity) v.getContext()).getIntent();
                     intent.setClass(v.getContext() , ChatActivity.class);
                     intent.putExtra("receiver", username.getText().toString());
+                    intent.putExtra("sender", intent.getStringExtra("username"));
                     v.getContext().startActivity(intent);
                 }
             });

@@ -15,6 +15,7 @@
         android:padding="7dp"
         android:layout_height="wrap_content">
         <ImageView
+            android:id="@+id/back"
             android:src="@drawable/ic_baseline_arrow_back_24"
             android:layout_marginTop="10dp"
             android:layout_marginRight="20dp"
@@ -40,6 +41,9 @@
         android:layout_height="512dp"
         android:layout_row="1"
         android:layout_column="0"
+        android:divider="@color/white"
+        android:dividerHeight="10dp"
+        android:background="@color/white"
         android:layout_gravity="fill" />
     <LinearLayout
         android:layout_row="2"

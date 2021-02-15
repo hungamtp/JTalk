@@ -127,7 +127,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if(task.isSuccessful()){
-                    User newUser = new User(emailstr   , usernamestr , passwordstr , false , false );
+                    User newUser = new User(emailstr   , usernamestr , passwordstr , "" , false );
                     FirebaseDatabase.getInstance().getReference("Users")
                             .child(usernamestr)
                             .setValue(newUser)
@@ -135,7 +135,6 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
                             if(task.isSuccessful()){
-                                Toast.makeText(RegisterActivity.this , "Oke" , Toast.LENGTH_LONG).show();
                                 startActivity(new Intent(RegisterActivity.this , LoginActivity.class));
                                 finish();
                             }
@@ -160,24 +159,5 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         });
     }
 
-    private boolean checkUsername(String username){
-         boolean result = true;
 
-        Query query = databaseReference.child("Users").orderByChild("username").equalTo(username);
-        query.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if(dataSnapshot.exists()){
-                    return ;
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-        return result;
-
-    }
 }

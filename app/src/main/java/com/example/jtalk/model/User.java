@@ -3,26 +3,19 @@ package com.example.jtalk.model;
 
 
 public class User {
-    public String email  ,  username  , password ;
+    public String email  ,  username  , password  , avatar;
     public boolean online;
-    public boolean avatar;
 
     public User(){
 
     }
 
-    public User(String email, String username, String password) {
+    public User(String email, String username, String password, String avatar, boolean online) {
         this.email = email;
         this.username = username;
         this.password = password;
-    }
-
-    public User(String email, String username, String password, boolean online, boolean avatar) {
-        this.email = email;
-        this.username = username;
-        this.password = password;
-        this.online = online;
         this.avatar = avatar;
+        this.online = online;
     }
 
     public String getEmail() {
@@ -49,19 +42,19 @@ public class User {
         this.password = password;
     }
 
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
+    }
+
     public boolean isOnline() {
         return online;
     }
 
     public void setOnline(boolean online) {
         this.online = online;
-    }
-
-    public boolean hasAvatar() {
-        return avatar;
-    }
-
-    public void setAvatar(boolean avatar) {
-        this.avatar = avatar;
     }
 }
