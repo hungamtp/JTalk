@@ -30,7 +30,7 @@ import com.google.firebase.storage.UploadTask;
 import java.io.ByteArrayOutputStream;
 
 
-public class ProfileActivity extends AppCompatActivity  {
+public class ProfileActivity extends AppCompatActivity implements View.OnClickListener {
     FirebaseStorage storage;
     DatabaseReference databaseReference;
     StorageReference storageReference;
@@ -53,57 +53,6 @@ public class ProfileActivity extends AppCompatActivity  {
         usernameStr = intent.getStringExtra("username");
         loadProfile();
 
-        done.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                databaseReference.child("Users").child(usernameStr).child("email").setValue(email.getText().toString());
-                if (isAvatarChanged) {
-                    databaseReference.child("Users").child(usernameStr).child("image").setValue(true);
-                    avatar.setDrawingCacheEnabled(true);
-                    avatar.buildDrawingCache();
-                    storageReference = FirebaseStorage.getInstance().getReference().child("avatar/" + usernameStr + ".jpg");
-                    Bitmap bitmap = ((BitmapDrawable) avatar.getDrawable()).getBitmap();
-                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                    bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
-                    byte[] data = baos.toByteArray();
-                    UploadTask uploadTask = storageReference.putBytes(data);
-                    Task<Uri> uriTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
-                        @Override
-                        public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
-                            if (!task.isSuccessful()) {
-                                throw task.getException();
-                            }
-                            return storageReference.getDownloadUrl();
-                        }
-                    }).addOnCompleteListener(new OnCompleteListener<Uri>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Uri> task) {
-                            if (task.isSuccessful()) {
-                                Uri downloadUri = task.getResult();
-                               databaseReference.child("Users").child(usernameStr).child("avatar").setValue(downloadUri.toString());
-                            }
-                        }
-                    });
-                }
-                finish();
-            }
-        });
-
-        cancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
-
-        avatar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                startActivityForResult(intent, REQUEST_CODE);
-            }
-        });
-
     }
 
 
@@ -121,9 +70,12 @@ public class ProfileActivity extends AppCompatActivity  {
     void initView() {
         username = findViewById(R.id.username);
         avatar = findViewById(R.id.avatar);
+        avatar.setOnClickListener(this::onClick);
         email = findViewById(R.id.email);
         done = findViewById(R.id.done);
+        done.setOnClickListener(this::onClick);
         cancel = findViewById(R.id.cancel);
+        cancel.setOnClickListener(this::onClick);
         changPassword = findViewById(R.id.change_password);
         storageReference = FirebaseStorage.getInstance().getReference();
         databaseReference = FirebaseDatabase.getInstance().getReference();
@@ -157,4 +109,61 @@ public class ProfileActivity extends AppCompatActivity  {
     }
 
 
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.done:
+                done();
+                break;
+            case R.id.cancel:
+                cancel();
+                break;
+            case R.id.avatar:
+                getAvatar();
+                break;
+        }
+
+    }
+
+    private void getAvatar() {
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        startActivityForResult(intent, REQUEST_CODE);
+    }
+
+    private void cancel() {
+        finish();
+    }
+
+    private void done() {
+        databaseReference.child("Users").child(usernameStr).child("email").setValue(email.getText().toString());
+        if (isAvatarChanged) {
+            databaseReference.child("Users").child(usernameStr).child("image").setValue(true);
+            avatar.setDrawingCacheEnabled(true);
+            avatar.buildDrawingCache();
+            storageReference = FirebaseStorage.getInstance().getReference().child("avatar/" + usernameStr + ".jpg");
+            Bitmap bitmap = ((BitmapDrawable) avatar.getDrawable()).getBitmap();
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
+            byte[] data = baos.toByteArray();
+            UploadTask uploadTask = storageReference.putBytes(data);
+            Task<Uri> uriTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+                @Override
+                public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                    if (!task.isSuccessful()) {
+                        throw task.getException();
+                    }
+                    return storageReference.getDownloadUrl();
+                }
+            }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+                @Override
+                public void onComplete(@NonNull Task<Uri> task) {
+                    if (task.isSuccessful()) {
+                        Uri downloadUri = task.getResult();
+                        databaseReference.child("Users").child(usernameStr).child("avatar").setValue(downloadUri.toString());
+                    }
+                }
+            });
+        }
+        finish();
+    }
 }

@@ -58,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = getIntent();
         username = intent.getStringExtra("username");
         loadAvatar();
-    signOut();
+        signOut();
         // fecth friend data to recycle view
         databaseReference.child("Users").child(username).child("friends").addChildEventListener(new ChildEventListener() {
             @Override
