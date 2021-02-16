@@ -12,6 +12,7 @@ import java.util.ArrayList;
 
 public class MessageAdapter  extends BaseAdapter {
     ArrayList<Message> messageList;
+    static final int SENDER = 1;
 
     public MessageAdapter(ArrayList<Message> messageList) {
         this.messageList = messageList;
@@ -38,7 +39,7 @@ public class MessageAdapter  extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         View messageView;
         if (convertView == null) {
-                if( getItemViewType(position) == 1){
+                if( getItemViewType(position) == SENDER){
                     messageView = View.inflate(parent.getContext(), R.layout.message_view_of_sender, null);
                 }
                 else{
@@ -61,7 +62,7 @@ public class MessageAdapter  extends BaseAdapter {
         if(messageList.get(position).isSender){
             isSender = true;
         }
-        if(isSender) type = 1;
+        if(isSender) type = SENDER;
 
         return type;
     }

@@ -42,7 +42,7 @@ public class FriendListAdapter extends RecyclerView.Adapter<FriendListAdapter.Vi
 
         if(user.online){
             // set image when is online
-            holder.online.setImageResource(R.drawable.ic_launcher_background);
+            holder.online.setImageResource(R.drawable.online);
         }else {
             // set image when is offline
             holder.online.setImageResource(R.drawable.ic_baseline_arrow_back_24);
@@ -54,6 +54,15 @@ public class FriendListAdapter extends RecyclerView.Adapter<FriendListAdapter.Vi
         }
 
 
+    }
+    public int getPositionById(String username){
+        int index = 0;
+        for(User x : friendList){
+            if(x.username.equals(username)){
+                break;
+            }else index ++;
+        }
+        return index;
     }
 
     @Override
@@ -87,11 +96,7 @@ public class FriendListAdapter extends RecyclerView.Adapter<FriendListAdapter.Vi
             username = itemView.findViewById(R.id.username);
             avatar = itemView.findViewById(R.id.avatar);
             online = itemView.findViewById(R.id.online);
-
-
         }
-
-
     }
 
 }

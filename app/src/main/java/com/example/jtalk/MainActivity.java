@@ -17,6 +17,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import com.example.jtalk.adapter.FriendListAdapter;
 import com.example.jtalk.model.User;
 import com.google.firebase.database.ChildEventListener;
@@ -38,10 +40,14 @@ public class MainActivity extends AppCompatActivity {
     DatabaseReference databaseReference;
     EditText nameSearch;
     Button btnSearch;
+
     Dialog searchFriendDialog;
     String username;
     ImageView avatar;
     StorageReference storageReference;
+
+    Button signout ;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,12 +58,13 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = getIntent();
         username = intent.getStringExtra("username");
         loadAvatar();
-
-        // fecth data to recycle view
+    signOut();
+        // fecth friend data to recycle view
         databaseReference.child("Users").child(username).child("friends").addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
                 String friendName = snapshot.getValue(String.class);
+                Toast.makeText(MainActivity.this , "changed" , Toast.LENGTH_LONG).show();
                 databaseReference.child("Users").child(friendName).addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -94,6 +101,10 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+
+
+
+
         //  find user
         btnSearch.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -117,8 +128,6 @@ public class MainActivity extends AppCompatActivity {
 
                                 }
                             });
-                            // add add friend
-                            // databaseReference.child("Users").child(username).child("friends").push().setValue(nameSearch.getText().toString());
                         }
                     }
 
@@ -205,6 +214,7 @@ public class MainActivity extends AppCompatActivity {
         nameSearch = findViewById(R.id.name);
         btnSearch = findViewById(R.id.btnSearch);
         friendListView = findViewById(R.id.friendList);
+        signout = findViewById(R.id.sign_out);
         avatar = findViewById(R.id.avatar);
         databaseReference = FirebaseDatabase.getInstance().getReference();
         friendList = new ArrayList<>();
@@ -241,6 +251,20 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
 
+            }
+        });
+    }
+
+
+    void signOut(){
+        signout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                databaseReference.child("Users").child(username).child("online").setValue(false);
+                Intent intent = new Intent();
+                intent.setClass(MainActivity.this , LoginActivity.class);
+                startActivity(intent);
+                finish();
             }
         });
     }

@@ -14,5 +14,6 @@
     <string name="profile">profile</string>
     <string name="done">done</string>
     <string name="cancel">cancel</string>
+    <string name="sign_out">Sign Out</string>
 
 </resources>

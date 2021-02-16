@@ -45,6 +45,9 @@ public class ChatActivity extends AppCompatActivity {
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
         setContentView(R.layout.activity_chat);
         initView();
+        Intent intent = getIntent();
+        sender = intent.getStringExtra("sender");
+        receiver = intent.getStringExtra("receiver");
 
         // get message from firebase
         databaseReference.child("Users").child(sender).child("Messages").addChildEventListener(new ChildEventListener() {
@@ -99,9 +102,6 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     void initView(){
-        Intent intent = getIntent();
-        sender = intent.getStringExtra("sender");
-        receiver = intent.getStringExtra("receiver");
         messagesList = new ArrayList<>();
         back = findViewById(R.id.back);
         messageAdapter = new MessageAdapter(messagesList);

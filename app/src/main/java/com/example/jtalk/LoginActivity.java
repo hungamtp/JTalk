@@ -19,7 +19,7 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
-    Button btRegister ;
+    Button btRegister;
     Button btLogin;
     EditText username;
     EditText password;
@@ -30,32 +30,32 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-
-        btRegister = findViewById(R.id.btRegister);
-        btRegister.setOnClickListener(this);
-
-        btLogin= findViewById(R.id.btLogin);
-        btLogin.setOnClickListener(this);
-
-
-        username = findViewById(R.id.username);
-        password = findViewById(R.id.password);
-
-        firebaseAuth = FirebaseAuth.getInstance();
+        init();
         // auto log
 //        username.setText("hungamtp");
 //        password.setText("hunghung");
 //        btLogin.callOnClick();
 
-        
+
     }
+
+    void init() {
+        btRegister = findViewById(R.id.btRegister);
+        btLogin = findViewById(R.id.btLogin);
+        username = findViewById(R.id.username);
+        password = findViewById(R.id.password);
+        btRegister.setOnClickListener(this);
+        btLogin.setOnClickListener(this);
+        firebaseAuth = FirebaseAuth.getInstance();
+    }
+
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.btRegister:
                 Intent intent = new Intent();
-                intent.setClass(LoginActivity.this , RegisterActivity.class);
+                intent.setClass(LoginActivity.this, RegisterActivity.class);
                 startActivity(intent);
                 break;
             case R.id.btLogin:
@@ -70,19 +70,19 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         queryUsername.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if(snapshot.exists()){
+                if (snapshot.exists()) {
                     Query queryPassword = databaseReference.child("Users").orderByChild("password").equalTo(password.getText().toString());
                     queryPassword.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            if(snapshot.exists()){
+                            if (snapshot.exists()) {
                                 Intent intent = new Intent();
                                 databaseReference.child("Users").child(username.getText().toString()).child("online").setValue(true);
-                                intent.putExtra("username" , username.getText().toString()) ;
-                                intent.setClass(LoginActivity.this , MainActivity.class);
+                                intent.putExtra("username", username.getText().toString());
+                                intent.setClass(LoginActivity.this, MainActivity.class);
                                 startActivity(intent);
 
-                            }else{
+                            } else {
                                 password.setError("wrong password");
                             }
                         }
@@ -93,8 +93,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                         }
                     });
 
-                }
-                else{
+                } else {
                     username.setError("Account not found");
                 }
 
