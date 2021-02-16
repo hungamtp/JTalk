@@ -11,6 +11,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -40,6 +41,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
     TextView done;
     TextView cancel;
     ImageView avatar;
+    Button signout ;
     String usernameStr;
     boolean isAvatarChanged = false;
     final int REQUEST_CODE = 1;
@@ -76,6 +78,8 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         done.setOnClickListener(this::onClick);
         cancel = findViewById(R.id.cancel);
         cancel.setOnClickListener(this::onClick);
+        signout = findViewById(R.id.sign_out);
+        signout.setOnClickListener(this::onClick);
         changPassword = findViewById(R.id.change_password);
         storageReference = FirebaseStorage.getInstance().getReference();
         databaseReference = FirebaseDatabase.getInstance().getReference();
@@ -121,7 +125,20 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
             case R.id.avatar:
                 getAvatar();
                 break;
+            case R.id.sign_out:
+                signOut();
+                break;
         }
+
+    }
+    void signOut(){
+
+
+                databaseReference.child("Users").child(usernameStr).child("online").setValue(false);
+                Intent intent = new Intent();
+                intent.setClass(ProfileActivity.this , LoginActivity.class);
+                startActivity(intent);
+                finish();
 
     }
 

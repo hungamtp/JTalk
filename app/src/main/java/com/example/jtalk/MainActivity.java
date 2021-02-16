@@ -6,7 +6,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.bumptech.glide.Glide;
+
 import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Color;
@@ -30,6 +32,7 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+
 import java.util.ArrayList;
 
 
@@ -46,8 +49,6 @@ public class MainActivity extends AppCompatActivity {
     ImageView avatar;
     StorageReference storageReference;
 
-    Button signout ;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,13 +59,12 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = getIntent();
         username = intent.getStringExtra("username");
         loadAvatar();
-        signOut();
         // fecth friend data to recycle view
         databaseReference.child("Users").child(username).child("friends").addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
                 String friendName = snapshot.getValue(String.class);
-                Toast.makeText(MainActivity.this , "changed" , Toast.LENGTH_LONG).show();
+                Toast.makeText(MainActivity.this, "changed", Toast.LENGTH_LONG).show();
                 databaseReference.child("Users").child(friendName).addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -100,9 +100,6 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-
-
-
 
 
         //  find user
@@ -214,7 +211,6 @@ public class MainActivity extends AppCompatActivity {
         nameSearch = findViewById(R.id.name);
         btnSearch = findViewById(R.id.btnSearch);
         friendListView = findViewById(R.id.friendList);
-        signout = findViewById(R.id.sign_out);
         avatar = findViewById(R.id.avatar);
         databaseReference = FirebaseDatabase.getInstance().getReference();
         friendList = new ArrayList<>();
@@ -243,7 +239,7 @@ public class MainActivity extends AppCompatActivity {
                 if (snapshot.exists()) {
                     User userProfile = snapshot.getValue(User.class);
                     if (!userProfile.avatar.equals("")) {
-                       Glide.with(MainActivity.this).load(userProfile.avatar).into(avatar);
+                        Glide.with(MainActivity.this).load(userProfile.avatar).into(avatar);
                     }
                 }
             }
@@ -255,19 +251,6 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-
-    void signOut(){
-        signout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                databaseReference.child("Users").child(username).child("online").setValue(false);
-                Intent intent = new Intent();
-                intent.setClass(MainActivity.this , LoginActivity.class);
-                startActivity(intent);
-                finish();
-            }
-        });
-    }
 
     @Override
     protected void onRestart() {

@@ -45,7 +45,7 @@ public class FriendListAdapter extends RecyclerView.Adapter<FriendListAdapter.Vi
             holder.online.setImageResource(R.drawable.online);
         }else {
             // set image when is offline
-            holder.online.setImageResource(R.drawable.ic_baseline_arrow_back_24);
+            holder.online.setImageResource(R.drawable.offline);
         }
 //
         if (!user.avatar.equals("")) {
