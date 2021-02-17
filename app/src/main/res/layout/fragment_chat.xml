@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_column="2"
+    tools:context=".ChatActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_row="0"
+        android:layout_column="0"
+        android:layout_columnSpan="2"
+        android:orientation="horizontal"
+        android:padding="7dp">
+
+        <ImageView
+            android:id="@+id/back"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="20dp"
+            android:src="@drawable/ic_baseline_arrow_back_24" />
+
+        <ImageView
+            android:id="@+id/avatar"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginRight="20dp"
+            android:src="@drawable/demo_avatar" />
+
+        <TextView
+            android:id="@+id/friendName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="20dp"
+            android:text="Hung" />
+    </LinearLayout>
+
+    <ListView
+        android:id="@+id/messageListView"
+        android:layout_width="wrap_content"
+        android:layout_height="512dp"
+        android:layout_row="1"
+        android:layout_column="0"
+        android:layout_gravity="fill"
+        android:background="@color/white"
+        android:divider="@color/white"
+        android:dividerHeight="10dp" />
+
+    <LinearLayout
+        android:layout_row="2"
+        android:layout_column="0"
+        android:layout_columnSpan="2"
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/message"
+            android:layout_width="350dp"
+            android:layout_height="50dp" />
+
+        <Button
+            android:id="@+id/btnSend"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/button"
+            android:text="@string/send" />
+    </LinearLayout>
+
+</GridLayout>
