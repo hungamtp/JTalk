@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="cancel" type="id"></item>
+    <item name="done" type="id"></item>
+    <item name="change_password" type="id"></item>
+    <item name="sign_out" type="id"></item>
+</resources>
