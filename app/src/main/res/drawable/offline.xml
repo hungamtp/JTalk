@@ -4,7 +4,7 @@
     android:shape="oval">
     <stroke
         android:width="1dp"
-        android:color="@color/online"
+        android:color="@color/offline"
         android:dashGap="1dp"
         />
     <solid

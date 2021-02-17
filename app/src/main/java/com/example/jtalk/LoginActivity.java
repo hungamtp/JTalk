@@ -32,9 +32,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         setContentView(R.layout.activity_login);
         init();
         // auto log
-//        username.setText("hungamtp");
-//        password.setText("hunghung");
-//        btLogin.callOnClick();
+        username.setText("hungamtp");
+        password.setText("hunghung");
+        btLogin.callOnClick();
 
 
     }

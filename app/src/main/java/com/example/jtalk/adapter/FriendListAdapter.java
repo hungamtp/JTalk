@@ -8,16 +8,19 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.bumptech.glide.Glide;
 import com.example.jtalk.ChatActivity;
 import com.example.jtalk.R;
 import com.example.jtalk.model.User;
+
 import java.util.List;
 
 public class FriendListAdapter extends RecyclerView.Adapter<FriendListAdapter.ViewHolder> {
-    private List<User> friendList ;
+    private List<User> friendList;
 
     public FriendListAdapter(List<User> friendList) {
         this.friendList = friendList;
@@ -28,22 +31,20 @@ public class FriendListAdapter extends RecyclerView.Adapter<FriendListAdapter.Vi
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         Context context = parent.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
-        View userView =
-                inflater.inflate(R.layout.user_item, parent, false);
-
+        View userView =   inflater.inflate(R.layout.user_item, parent, false);
         ViewHolder viewHolder = new ViewHolder(userView);
         return viewHolder;
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        User user =  friendList.get(position);
+        User user = friendList.get(position);
         holder.username.setText(user.username);
 
-        if(user.online){
+        if (user.online) {
             // set image when is online
             holder.online.setImageResource(R.drawable.online);
-        }else {
+        } else {
             // set image when is offline
             holder.online.setImageResource(R.drawable.offline);
         }
@@ -55,12 +56,13 @@ public class FriendListAdapter extends RecyclerView.Adapter<FriendListAdapter.Vi
 
 
     }
-    public int getPositionById(String username){
+
+    public int getPositionById(String username) {
         int index = 0;
-        for(User x : friendList){
-            if(x.username.equals(username)){
+        for (User x : friendList) {
+            if (x.username.equals(username)) {
                 break;
-            }else index ++;
+            } else index++;
         }
         return index;
     }
@@ -70,7 +72,7 @@ public class FriendListAdapter extends RecyclerView.Adapter<FriendListAdapter.Vi
         return friendList.size();
     }
 
-    public String getItemUsername(int position){
+    public String getItemUsername(int position) {
         return friendList.get(position).username;
     }
 
@@ -80,13 +82,14 @@ public class FriendListAdapter extends RecyclerView.Adapter<FriendListAdapter.Vi
         TextView username;
         ImageView avatar;
         ImageView online;
+
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Intent intent = ((Activity) v.getContext()).getIntent();
-                    intent.setClass(v.getContext() , ChatActivity.class);
+                    intent.setClass(v.getContext(), ChatActivity.class);
                     intent.putExtra("receiver", username.getText().toString());
                     intent.putExtra("sender", intent.getStringExtra("username"));
                     v.getContext().startActivity(intent);

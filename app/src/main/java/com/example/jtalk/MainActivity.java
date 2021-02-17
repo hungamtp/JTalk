@@ -43,12 +43,11 @@ public class MainActivity extends AppCompatActivity {
     DatabaseReference databaseReference;
     EditText nameSearch;
     Button btnSearch;
-
     Dialog searchFriendDialog;
     String username;
     ImageView avatar;
     StorageReference storageReference;
-
+    Intent newIntent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -169,7 +168,7 @@ public class MainActivity extends AppCompatActivity {
         avatar = searchFriendDialog.findViewById(R.id.avatar);
         btnText = searchFriendDialog.findViewById(R.id.btnText);
         btnClose = searchFriendDialog.findViewById(R.id.btnClose);
-        avatar.setImageResource(R.drawable.ic_launcher_background);
+        Glide.with(this).load(friend.avatar).into(avatar);
         friendName.setText(friend.username);
 
 
@@ -183,7 +182,7 @@ public class MainActivity extends AppCompatActivity {
         btnText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent newIntent = new Intent();
+                newIntent = new Intent();
                 newIntent.setClass(MainActivity.this, ChatActivity.class);
                 newIntent.putExtra("sender", username);
                 newIntent.putExtra("receiver", nameSearch.getText().toString());

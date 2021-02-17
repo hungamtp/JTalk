@@ -9,4 +9,5 @@
     <color name="white">#FFFFFFFF</color>
     <color name="online">#EA9191</color>
     <color name="offline">#40000000</color>
+    <color name="message">#609191</color>
 </resources>

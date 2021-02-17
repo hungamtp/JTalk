@@ -3,21 +3,30 @@ package com.example.jtalk.adapter;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+
+import com.bumptech.glide.Glide;
 import com.example.jtalk.R;
 import com.example.jtalk.model.Message;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 import java.util.ArrayList;
 
 
-public class MessageAdapter  extends BaseAdapter {
+public class MessageAdapter extends BaseAdapter {
     ArrayList<Message> messageList;
     static final int SENDER = 1;
 
     public MessageAdapter(ArrayList<Message> messageList) {
         this.messageList = messageList;
     }
-
 
 
     @Override
@@ -38,31 +47,43 @@ public class MessageAdapter  extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         View messageView;
+        Message message = (Message) getItem(position);
         if (convertView == null) {
-                if( getItemViewType(position) == SENDER){
-                    messageView = View.inflate(parent.getContext(), R.layout.message_view_of_sender, null);
-                }
-                else{
-                    messageView = View.inflate(parent.getContext(), R.layout.message_view_of_receiver, null);
-                }
+            if (getItemViewType(position) == SENDER) {
+                messageView = View.inflate(parent.getContext(), R.layout.message_view_of_sender, null);
 
+            } else {
+                messageView = View.inflate(parent.getContext(), R.layout.message_view_of_receiver, null);
+                DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
+                databaseReference.child("Users").child(message.receiver).child("avatar").addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        String avatarLink = snapshot.getValue(String.class);
+                        if (!avatarLink.equals("")) {
+                            Glide.with(parent.getContext()).load(avatarLink).into((ImageView) messageView.findViewById(R.id.avatar));
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                    }
+                });
+            }
         } else messageView = convertView;
 
 
-        Message message = (Message) getItem(position);
-       // ((ImageView) messageView.findViewById(R.id.avatar)).setimage(R.drawable.demo_avatar);
         ((TextView) messageView.findViewById(R.id.message)).setText(String.format("%s", message.message));
         return messageView;
     }
 
     @Override
     public int getItemViewType(int position) {
-        int type =0;
+        int type = 0;
         boolean isSender = false;
-        if(messageList.get(position).isSender){
+        if (messageList.get(position).isSender) {
             isSender = true;
         }
-        if(isSender) type = SENDER;
+        if (isSender) type = SENDER;
 
         return type;
     }
