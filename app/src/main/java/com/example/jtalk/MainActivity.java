@@ -63,17 +63,34 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
                 String friendName = snapshot.getValue(String.class);
-                Toast.makeText(MainActivity.this, "changed", Toast.LENGTH_LONG).show();
-                databaseReference.child("Users").child(friendName).addListenerForSingleValueEvent(new ValueEventListener() {
+                databaseReference.child("Users").child(friendName).addChildEventListener(new ChildEventListener() {
                     @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        User myFriend = snapshot.getValue(User.class);
-                        friendList.add(myFriend);
+                    public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                        User friend = snapshot.getValue(User.class);
+                        friendList.add(friend);
+                        friendListAdapter.notifyDataSetChanged();
+                    }
+                    @Override
+                    public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                        User friend = snapshot.getValue(User.class);
+                        int position  =friendListAdapter.getPositionById(friend.username);
+                        friendList.get(position).online = friend.online;
                         friendListAdapter.notifyDataSetChanged();
                     }
 
                     @Override
+                    public void onChildRemoved(@NonNull DataSnapshot snapshot) {
+
+                    }
+
+                    @Override
+                    public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+                    }
+
+                    @Override
                     public void onCancelled(@NonNull DatabaseError error) {
+
                     }
                 });
 
