@@ -64,14 +64,72 @@ public class ChatFragment extends Fragment {
         super.onStart();
         view = getView();
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
+
         Intent intent = getActivity().getIntent();
         sender = intent.getStringExtra("sender");
         receiver = intent.getStringExtra("receiver");
+
         initView();
         loadAvatar();
+        loadMessage();
 
-        // get message from firebase
-        databaseReference.child("Users").child(sender).child("Messages").addChildEventListener(new ChildEventListener() {
+        btnSend.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Message sendedMessage = new Message(sender , receiver , message.getText().toString() , true);
+                databaseReference.child("Users").child(sender).child("Messages").child(receiver).push().setValue(sendedMessage);
+
+                Message receiverMessage = new Message(sender , receiver , message.getText().toString() , false);
+                databaseReference.child("Users").child(receiver).child("Messages").child(sender).push().setValue(receiverMessage);
+
+                message.clearFocus();
+                message.setText("");
+                messageAdapter.notifyDataSetChanged();
+            }
+        });
+
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getActivity().finish();
+            }
+        });
+        
+    }
+    void initView(){
+        messagesList = new ArrayList<>();
+        back = view.findViewById(R.id.back);
+        messageAdapter = new MessageAdapter(messagesList);
+        messageListView = view.findViewById(R.id.messageListView);
+        avatar= view.findViewById(R.id.avatar);
+        messageListView.setAdapter(messageAdapter);
+        btnSend = view.findViewById(R.id.btnSend);
+        message = view.findViewById(R.id.message);
+        friendName = view.findViewById(R.id.friendName);
+        friendName.setText(receiver);
+        databaseReference = FirebaseDatabase.getInstance().getReference();
+    }
+
+    void loadAvatar(){
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
+        databaseReference.child("Users").child(receiver).child("avatar").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                String avatarLink = snapshot.getValue(String.class);
+                if(!avatarLink.equals("")){
+                    Glide.with(getContext()).load(avatarLink).into(avatar);
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+    void loadMessage(){
+        // fetch Message from firebase
+        databaseReference.child("Users").child(sender).child("Messages").child(receiver).addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
                 Message newMessage = snapshot.getValue(Message.class);
@@ -100,55 +158,6 @@ public class ChatFragment extends Fragment {
             }
         });
 
-        btnSend.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Message sendedMessage = new Message(sender , receiver , message.getText().toString() , true);
-                Message receiverMessage = new Message(sender , receiver , message.getText().toString() , false);
-                databaseReference.child("Users").child(sender).child("Messages").push().setValue(sendedMessage);
-                databaseReference.child("Users").child(receiver).child("Messages").push().setValue(receiverMessage);
-                message.clearFocus();
-                message.setText("");
-                messageAdapter.notifyDataSetChanged();
-            }
-        });
 
-        back.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getActivity().finish();
-            }
-        });
-        
-    }
-    void initView(){
-        messagesList = new ArrayList<>();
-        back = view.findViewById(R.id.back);
-        messageAdapter = new MessageAdapter(messagesList);
-        messageListView = view.findViewById(R.id.messageListView);
-        avatar= view.findViewById(R.id.avatar);
-        messageListView.setAdapter(messageAdapter);
-        btnSend = view.findViewById(R.id.btnSend);
-        message = view.findViewById(R.id.message);
-        friendName = view.findViewById(R.id.friendName);
-        friendName.setText(receiver);
-        databaseReference = FirebaseDatabase.getInstance().getReference();
-    }
-    void loadAvatar(){
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
-        databaseReference.child("Users").child(receiver).child("avatar").addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                String avatarLink = snapshot.getValue(String.class);
-                if(!avatarLink.equals("")){
-                    Glide.with(getContext()).load(avatarLink).into(avatar);
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
     }
 }
