@@ -15,14 +15,15 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.jtalk.ChatActivity;
 import com.example.jtalk.R;
+import com.example.jtalk.model.Chat;
 import com.example.jtalk.model.User;
 
 import java.util.List;
 
 public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.ViewHolder> {
-    private List<User> friendList;
+    private List<Chat> friendList;
 
-    public ChatListAdapter(List<User> friendList) {
+    public ChatListAdapter(List<Chat> friendList) {
         this.friendList = friendList;
     }
 
@@ -38,10 +39,11 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        User user = friendList.get(position);
-        holder.username.setText(user.username);
+        Chat chat = friendList.get(position);
+        holder.username.setText(chat.username);
+        holder.lastmessage.setText(chat.lastMessages);
 
-        if (user.online) {
+        if (chat.online) {
             // set image when is online
             holder.online.setImageResource(R.drawable.online);
         } else {
@@ -49,9 +51,9 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.ViewHo
             holder.online.setImageResource(R.drawable.offline);
         }
 //
-        if (!user.avatar.equals("")) {
+        if (!chat.avatar.equals("")) {
             // set avatar
-            Glide.with(holder.avatar.getContext()).load(user.avatar).into(holder.avatar);
+            Glide.with(holder.avatar.getContext()).load(chat.avatar).into(holder.avatar);
         }
 
 
@@ -91,6 +93,7 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.ViewHo
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         TextView username;
+        TextView lastmessage;
         ImageView avatar;
         ImageView online;
 
@@ -106,7 +109,7 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.ViewHo
                     v.getContext().startActivity(intent);
                 }
             });
-
+            lastmessage = itemView.findViewById(R.id.last_message);
             username = itemView.findViewById(R.id.username);
             avatar = itemView.findViewById(R.id.avatar);
             online = itemView.findViewById(R.id.online);

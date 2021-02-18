@@ -11,8 +11,11 @@ import com.bumptech.glide.Glide;
 
 import android.app.Dialog;
 import android.content.Intent;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.ColorFilter;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -21,7 +24,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.jtalk.adapter.ChatListAdapter;
 import com.example.jtalk.adapter.FriendListAdapter;
+import com.example.jtalk.model.Chat;
+import com.example.jtalk.model.Message;
 import com.example.jtalk.model.User;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -34,14 +40,17 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 
 public class MainActivity extends AppCompatActivity {
     RecyclerView friendListView;
     ArrayList<User> friendList;
-    List<String> friendNameList;
     FriendListAdapter friendListAdapter;
+    List<Chat> chatList;
+    ChatListAdapter chatListAdapter;
+    RecyclerView chatListView;
     DatabaseReference databaseReference;
     EditText nameSearch;
     Button btnSearch;
@@ -60,7 +69,8 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = getIntent();
         username = intent.getStringExtra("username");
         loadAvatar();
-        getFriendNameList();
+        getFriendList();
+        getChatList();
 
 
         //  find user
@@ -172,17 +182,21 @@ public class MainActivity extends AppCompatActivity {
         nameSearch = findViewById(R.id.name);
         btnSearch = findViewById(R.id.btnSearch);
         friendListView = findViewById(R.id.friendList);
-        friendNameList = new ArrayList<>();
         avatar = findViewById(R.id.avatar);
+        chatListView = findViewById(R.id.chatList);
         databaseReference = FirebaseDatabase.getInstance().getReference();
         friendList = new ArrayList<>();
         friendListAdapter = new FriendListAdapter(friendList);
-        friendListView.setLayoutManager(new LinearLayoutManager(this , LinearLayoutManager.HORIZONTAL , false));
+        friendListView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         friendListView.addItemDecoration(new DividerItemDecoration(this, 0));
         friendListView.setAdapter(friendListAdapter);
+        chatList = new ArrayList<>();
+        chatListAdapter = new ChatListAdapter(chatList);
+        chatListView.setLayoutManager(new LinearLayoutManager(this));
+        chatListView.addItemDecoration(new DividerItemDecoration(this , 0));
+        chatListView.setAdapter(chatListAdapter);
         searchFriendDialog = new Dialog(this);
         storageReference = FirebaseStorage.getInstance().getReference();
-
 
     }
 
@@ -213,46 +227,12 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+
     void getFriendList() {
-        getFriendNameList();
-        for (String friendName : friendNameList) {
-            databaseReference.child("Users").child(friendName).addChildEventListener(new ChildEventListener() {
-                @Override
-                public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-                    User friend = snapshot.getValue(User.class);
-                    friendList.add(friend);
-                    friendListAdapter.notifyDataSetChanged();
-                }
-
-                @Override
-                public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-
-                }
-
-                @Override
-                public void onChildRemoved(@NonNull DataSnapshot snapshot) {
-
-                }
-
-                @Override
-                public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
-
-                }
-            });
-        }
-    }
-
-    void getFriendNameList() {
         databaseReference.child("Users").child(username).child("friends").addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
                 String friendName = snapshot.getValue(String.class);
-                friendNameList.add(friendName);
                 databaseReference.child("Users").child(friendName).addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -298,7 +278,77 @@ public class MainActivity extends AppCompatActivity {
         });
 
     }
+    void getChatList() {
+       databaseReference.child("Users").child(username).child("friends").addChildEventListener(new ChildEventListener() {
+           @Override
+           public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+               String friendName = snapshot.getValue(String.class);
+               databaseReference.child("Users").child(friendName).addValueEventListener(new ValueEventListener() {
+                   @Override
+                   public void onDataChange(@NonNull DataSnapshot snapshot) {
+                       Chat newChat = snapshot.getValue(Chat.class);
+                       databaseReference.child("Users").child(username).child("Messages").child(newChat.username).limitToLast(1).addChildEventListener(new ChildEventListener() {
+                           @Override
+                           public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                               if(snapshot.exists()){
+                                   Message lastMess = snapshot.getValue(Message.class);
+                                    newChat.lastMessages = lastMess.message;
+                                   chatList.add(newChat);
+                                   chatListAdapter.notifyDataSetChanged();
+                               }
+                           }
 
+                           @Override
+                           public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+                           }
+
+                           @Override
+                           public void onChildRemoved(@NonNull DataSnapshot snapshot) {
+
+                           }
+
+                           @Override
+                           public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+                           }
+
+                           @Override
+                           public void onCancelled(@NonNull DatabaseError error) {
+
+                           }
+                       });
+
+                   }
+
+                   @Override
+                   public void onCancelled(@NonNull DatabaseError error) {
+
+                   }
+               });
+           }
+
+           @Override
+           public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+           }
+
+           @Override
+           public void onChildRemoved(@NonNull DataSnapshot snapshot) {
+
+           }
+
+           @Override
+           public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+           }
+
+           @Override
+           public void onCancelled(@NonNull DatabaseError error) {
+
+           }
+       });
+    }
 
     @Override
     protected void onRestart() {

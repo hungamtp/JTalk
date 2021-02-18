@@ -1,12 +1,12 @@
 package com.example.jtalk.model;
 
-public class Chatter extends User{
-    String lastMessages;
+public class Chat extends User{
+    public String lastMessages;
 
-    public Chatter() {
+    public Chat() {
     }
 
-    public Chatter(String email, String username, String password, String avatar, boolean online, String lastMessages) {
+    public Chat(String email, String username, String password, String avatar, boolean online, String lastMessages) {
         super(email, username, password, avatar, online);
         this.lastMessages = lastMessages;
     }
