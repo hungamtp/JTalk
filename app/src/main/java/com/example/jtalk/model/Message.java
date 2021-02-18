@@ -3,6 +3,7 @@ package com.example.jtalk.model;
 public class Message {
     public String receiver , sender , message;
     public boolean isSender;
+    public boolean isRead;
 
 
     public Message(){

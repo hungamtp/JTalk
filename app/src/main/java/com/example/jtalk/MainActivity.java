@@ -292,8 +292,11 @@ public class MainActivity extends AppCompatActivity {
                            public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
                                if(snapshot.exists()){
                                    Message lastMess = snapshot.getValue(Message.class);
-                                    newChat.lastMessages = lastMess.message;
-                                   chatList.add(newChat);
+                                   newChat.lastMessages = lastMess.message;
+                                   int postion = chatListAdapter.getPositionById(newChat.username);
+                                   if(postion  == -1){
+                                       chatList.add(newChat);
+                                   }
                                    chatListAdapter.notifyDataSetChanged();
                                }
                            }
