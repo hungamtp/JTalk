@@ -19,10 +19,10 @@ import com.example.jtalk.model.User;
 
 import java.util.List;
 
-public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.ViewHolder> {
+public class FriendListAdapter extends RecyclerView.Adapter<FriendListAdapter.ViewHolder> {
     private List<User> friendList;
 
-    public ChatListAdapter(List<User> friendList) {
+    public FriendListAdapter(List<User> friendList) {
         this.friendList = friendList;
     }
 

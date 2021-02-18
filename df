@@ -1,0 +1,108 @@
+[33mcommit f63af9caa6da3b1bd0bed86b853eee15f00718d4[m[33m ([m[1;36mHEAD -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m)[m
+Author: Hung <64697292+hungamtp@users.noreply.github.com>
+Date:   Thu Feb 18 08:27:34 2021 +0700
+
+    fix chat fragment
+
+[33mcommit ca18b2f67fff230b2be8d437237e850b4175c211[m
+Author: Hung <64697292+hungamtp@users.noreply.github.com>
+Date:   Wed Feb 17 09:58:03 2021 +0700
+
+    add avatar in chat view
+
+[33mcommit ddb7a5be0fb0fc32dc585e3e2dac3cce4f77e0c1[m
+Author: Hung <64697292+hungamtp@users.noreply.github.com>
+Date:   Wed Feb 17 07:55:14 2021 +0700
+
+    add chat fragment
+
+[33mcommit d03193855f2b9ab74f47c36a2b860254ae6c57ae[m
+Author: Hung <64697292+hungamtp@users.noreply.github.com>
+Date:   Wed Feb 17 07:35:22 2021 +0700
+
+    add profile fragment
+
+[33mcommit 00bfc9a7d8dc7288afd6bb96c81fdc4803962c8f[m
+Author: Hung <64697292+hungamtp@users.noreply.github.com>
+Date:   Wed Feb 17 07:15:05 2021 +0700
+
+    before add fragment
+
+[33mcommit f8bf8b0f0ca02683495aa81b7708635b6189086a[m
+Author: Hung <64697292+hungamtp@users.noreply.github.com>
+Date:   Wed Feb 17 04:20:46 2021 +0700
+
+    circle view
+
+[33mcommit d21ae88907e8f85af93b6ca5ac84cf6ae432c314[m
+Author: Hung <64697292+hungamtp@users.noreply.github.com>
+Date:   Wed Feb 17 03:14:41 2021 +0700
+
+    set onclick profile
+
+[33mcommit 2e467a64d28518e0d485a57ce82dff814705e669[m
+Author: Hung <64697292+hungamtp@users.noreply.github.com>
+Date:   Wed Feb 17 03:06:41 2021 +0700
+
+    17-2
+
+[33mcommit eb9d08f3b6a12f3aec930bdcb9119e64c074b161[m
+Author: Hung <64697292+hungamtp@users.noreply.github.com>
+Date:   Tue Feb 16 02:21:30 2021 +0700
+
+    16-2
+
+[33mcommit 116ccd31b832c2263d14d5bed0b6c5a6528d6efe[m
+Author: Hung <64697292+hungamtp@users.noreply.github.com>
+Date:   Mon Feb 15 05:11:01 2021 +0700
+
+    fix profile
+
+[33mcommit 8219917a67a557fce2668f9e76aa47952f855646[m
+Merge: 315f765 8b44cb1
+Author: Hung <64697292+hungamtp@users.noreply.github.com>
+Date:   Mon Feb 15 04:45:44 2021 +0700
+
+    Merge branch 'main' of https://github.com/hungamtp/JTalk into main
+
+[33mcommit 315f765aea6808edfeda9b4de65e11e67f30a8ec[m
+Author: Hung <64697292+hungamtp@users.noreply.github.com>
+Date:   Mon Feb 15 04:44:25 2021 +0700
+
+    add profile activity
+
+[33mcommit 8b44cb12250889b7f47519e5e11b2d0271bff156[m
+Author: Hung <64697292+hungamtp@users.noreply.github.com>
+Date:   Mon Feb 15 00:23:09 2021 +0700
+
+    Create README.md
+
+[33mcommit 6088fb37b696f0ff87eb7abefa1c57f4e9627706[m
+Author: Hung <64697292+hungamtp@users.noreply.github.com>
+Date:   Thu Feb 11 00:04:41 2021 +0700
+
+    done chat with layout for sender and receiver
+
+[33mcommit b82354274a0b5c654c7be4680f6e90a86e0241af[m
+Author: Hung <64697292+hungamtp@users.noreply.github.com>
+Date:   Wed Feb 10 22:29:07 2021 +0700
+
+    chat activity
+
+[33mcommit 3bc1b28838374bc0ee75c6e51424071e4d041d6e[m
+Author: Hung <64697292+hungamtp@users.noreply.github.com>
+Date:   Wed Feb 10 03:02:19 2021 +0700
+
+    show friend  list and add friend function lack off chat , chat group , add group , check isfriend or not
+
+[33mcommit 5357bf4c43b53911ab08e299a1ed3382405f0bcc[m
+Author: Hung <64697292+hungamtp@users.noreply.github.com>
+Date:   Tue Feb 9 12:45:31 2021 +0700
+
+    a
+
+[33mcommit 30e5e57309d1a762b2eb3be6d8b0be98031e1071[m
+Author: Hung <64697292+hungamtp@users.noreply.github.com>
+Date:   Tue Feb 9 06:29:11 2021 +0700
+
+    sencon
