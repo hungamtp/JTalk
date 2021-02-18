@@ -14,6 +14,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -21,7 +22,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.jtalk.adapter.FriendListAdapter;
+import com.example.jtalk.adapter.ChatListAdapter;
+import com.example.jtalk.model.Chat;
 import com.example.jtalk.model.User;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -34,12 +36,14 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
+import java.util.List;
 
 
-public class MainActivity extends AppCompatActivity {
-    RecyclerView friendListView;
-    ArrayList<User> friendList;
-    FriendListAdapter friendListAdapter;
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+    RecyclerView chatListView;
+    ArrayList<Chat> chatList;
+    List<User> friendList;
+    ChatListAdapter chatListAdapter;
     DatabaseReference databaseReference;
     EditText nameSearch;
     Button btnSearch;
@@ -58,24 +62,87 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = getIntent();
         username = intent.getStringExtra("username");
         loadAvatar();
-        // fecth friend data to recycle view
+        // fecth chat data to recycle view
         databaseReference.child("Users").child(username).child("friends").addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
                 String friendName = snapshot.getValue(String.class);
-                Toast.makeText(MainActivity.this, "changed", Toast.LENGTH_LONG).show();
-                databaseReference.child("Users").child(friendName).addListenerForSingleValueEvent(new ValueEventListener() {
+                databaseReference.child("Users").child(username).child("Messages").child(friendName).addChildEventListener(new ChildEventListener() {
                     @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        User myFriend = snapshot.getValue(User.class);
-                        friendList.add(myFriend);
-                        friendListAdapter.notifyDataSetChanged();
+                    public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+                     if(snapshot.exists())
+                        Chat newChat = snapshot.getValue(Chat.class);
+                        chatList.add(newChat);
+
+                        databaseReference.child("Users").child(username).child("Messages").child(newChat.username).limitToLast(1).addChildEventListener(new ChildEventListener() {
+                            @Override
+                            public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                                String lastMessage = snapshot.getValue(String.class);
+                                newChat.lastMessage = lastMessage;
+                                chatListAdapter.notifyDataSetChanged();
+                            }
+
+                            @Override
+                            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+                            }
+
+                            @Override
+                            public void onChildRemoved(@NonNull DataSnapshot snapshot) {
+
+                            }
+
+                            @Override
+                            public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+
+                            }
+                        });
+                    }
+                    }
+
+                    @Override
+                    public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+                    }
+
+                    @Override
+                    public void onChildRemoved(@NonNull DataSnapshot snapshot) {
+
+                    }
+
+                    @Override
+                    public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
                     }
 
                     @Override
                     public void onCancelled(@NonNull DatabaseError error) {
+
                     }
                 });
+//                databaseReference.child("Users").child(friendName).addValueEventListener(new ValueEventListener() {
+//                    @Override
+//                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                        Chat chat = snapshot.getValue(Chat.class);
+//                        if (chatListAdapter.checkUser(chat.username)) {
+//                            chatList.get(chatListAdapter.getPositionById(chat.username)).online = chat.online;
+//                        } else {
+//                            chatList.add(chat);
+//                        }
+//                        chatListAdapter.notifyDataSetChanged();
+//                    }
+//
+//                    @Override
+//                    public void onCancelled(@NonNull DatabaseError error) {
+//
+//                    }
+//                });
 
             }
 
@@ -101,49 +168,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
-        //  find user
-        btnSearch.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Query query = databaseReference.child("Users").orderByChild("username").equalTo(nameSearch.getText().toString());
-                query.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        if (!snapshot.exists()) {
-                            nameSearch.setError("No user found");
-                        } else {
-                            databaseReference.child("Users").child(nameSearch.getText().toString()).addListenerForSingleValueEvent(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                    User friend = snapshot.getValue(User.class);
-                                    showPopup(v, friend);
-                                }
 
-                                @Override
-                                public void onCancelled(@NonNull DatabaseError error) {
-
-                                }
-                            });
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-
-                    }
-                });
-            }
-        });
-
-        avatar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent profileIntent = new Intent();
-                profileIntent.putExtra("username", username);
-                profileIntent.setClass(MainActivity.this, ProfileActivity.class);
-                startActivity(profileIntent);
-            }
-        });
     }
 
     public void showPopup(View v, User friend) {
@@ -209,14 +234,17 @@ public class MainActivity extends AppCompatActivity {
     void initView() {
         nameSearch = findViewById(R.id.name);
         btnSearch = findViewById(R.id.btnSearch);
-        friendListView = findViewById(R.id.friendList);
+        chatListView = findViewById(R.id.friendList);
         avatar = findViewById(R.id.avatar);
+        avatar.setOnClickListener(this::onClick);
+        btnSearch.setOnClickListener(this::onClick);
         databaseReference = FirebaseDatabase.getInstance().getReference();
+        chatList = new ArrayList<>();
         friendList = new ArrayList<>();
-        friendListAdapter = new FriendListAdapter(friendList);
-        friendListView.setLayoutManager(new LinearLayoutManager(this));
-        friendListView.addItemDecoration(new DividerItemDecoration(this, 0));
-        friendListView.setAdapter(friendListAdapter);
+        chatListAdapter = new ChatListAdapter(chatList);
+        chatListView.setLayoutManager(new LinearLayoutManager(this));
+        chatListView.addItemDecoration(new DividerItemDecoration(this, 0));
+        chatListView.setAdapter(chatListAdapter);
         searchFriendDialog = new Dialog(this);
         storageReference = FirebaseStorage.getInstance().getReference();
 
@@ -255,7 +283,87 @@ public class MainActivity extends AppCompatActivity {
     protected void onRestart() {
         super.onRestart();
         loadAvatar();
+    }
 
+    private void getFriendList() {
+        databaseReference.child(username).child("friends").addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                User friend = snapshot.getValue(User.class);
+                friendList.add(friend);
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot snapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.avatar:
+                profile();
+                break;
+            case R.id.btnSearch:
+                searchFriend();
+                break;
+
+        }
+    }
+
+    private void searchFriend() {
+        Query query = databaseReference.child("Users").orderByChild("username").equalTo(nameSearch.getText().toString());
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (!snapshot.exists()) {
+                    nameSearch.setError("No user found");
+                } else {
+                    databaseReference.child("Users").child(nameSearch.getText().toString()).addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            User friend = snapshot.getValue(User.class);
+                            showPopup(btnSearch.getRootView(), friend);
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+    private void profile() {
+        Intent profileIntent = new Intent();
+        profileIntent.putExtra("username", username);
+        profileIntent.setClass(MainActivity.this, ProfileActivity.class);
+        startActivity(profileIntent);
     }
 }
 

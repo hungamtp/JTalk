@@ -15,14 +15,16 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.jtalk.ChatActivity;
 import com.example.jtalk.R;
+import com.example.jtalk.model.Chat;
 import com.example.jtalk.model.User;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class FriendListAdapter extends RecyclerView.Adapter<FriendListAdapter.ViewHolder> {
-    private List<User> friendList;
+public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.ViewHolder> {
+    private ArrayList<Chat> friendList;
 
-    public FriendListAdapter(List<User> friendList) {
+    public ChatListAdapter(ArrayList<Chat> friendList) {
         this.friendList = friendList;
     }
 
@@ -69,7 +71,7 @@ public class FriendListAdapter extends RecyclerView.Adapter<FriendListAdapter.Vi
 
     public boolean checkUser(String username){
         boolean result = false;
-        for(User friend : friendList){
+        for(Chat friend : friendList){
             if(friend.username.equals(username)){
                 result = true;
                 break;

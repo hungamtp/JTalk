@@ -55,7 +55,7 @@ public class MessageAdapter extends BaseAdapter {
             } else {
                 messageView = View.inflate(parent.getContext(), R.layout.message_view_of_receiver, null);
                 DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
-                databaseReference.child("Users").child(message.receiver).child("avatar").addListenerForSingleValueEvent(new ValueEventListener() {
+                databaseReference.child("Users").child(message.sender).child("avatar").addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         String avatarLink = snapshot.getValue(String.class);
