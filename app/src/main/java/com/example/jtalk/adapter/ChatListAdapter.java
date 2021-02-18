@@ -19,10 +19,10 @@ import com.example.jtalk.model.User;
 
 import java.util.List;
 
-public class FriendListAdapter extends RecyclerView.Adapter<FriendListAdapter.ViewHolder> {
+public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.ViewHolder> {
     private List<User> friendList;
 
-    public FriendListAdapter(List<User> friendList) {
+    public ChatListAdapter(List<User> friendList) {
         this.friendList = friendList;
     }
 
@@ -31,7 +31,7 @@ public class FriendListAdapter extends RecyclerView.Adapter<FriendListAdapter.Vi
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         Context context = parent.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
-        View userView =   inflater.inflate(R.layout.user_item_in_vertical, parent, false);
+        View userView =   inflater.inflate(R.layout.user_item, parent, false);
         ViewHolder viewHolder = new ViewHolder(userView);
         return viewHolder;
     }
@@ -61,7 +61,7 @@ public class FriendListAdapter extends RecyclerView.Adapter<FriendListAdapter.Vi
         int index = 0;
         for (User x : friendList) {
             if (x.username.equals(username)) {
-               return index;
+                return index;
             } else index++;
         }
         return -1;

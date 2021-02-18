@@ -34,11 +34,13 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
+import java.util.List;
 
 
 public class MainActivity extends AppCompatActivity {
     RecyclerView friendListView;
     ArrayList<User> friendList;
+    List<String> friendNameList;
     FriendListAdapter friendListAdapter;
     DatabaseReference databaseReference;
     EditText nameSearch;
@@ -58,64 +60,7 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = getIntent();
         username = intent.getStringExtra("username");
         loadAvatar();
-        // fecth friend data to recycle view
-        databaseReference.child("Users").child(username).child("friends").addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-                String friendName = snapshot.getValue(String.class);
-                databaseReference.child("Users").child(friendName).addChildEventListener(new ChildEventListener() {
-                    @Override
-                    public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-                        User friend = snapshot.getValue(User.class);
-                        friendList.add(friend);
-                        friendListAdapter.notifyDataSetChanged();
-                    }
-                    @Override
-                    public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-                        User friend = snapshot.getValue(User.class);
-                        int position  =friendListAdapter.getPositionById(friend.username);
-                        friendList.get(position).online = friend.online;
-                        friendListAdapter.notifyDataSetChanged();
-                    }
-
-                    @Override
-                    public void onChildRemoved(@NonNull DataSnapshot snapshot) {
-
-                    }
-
-                    @Override
-                    public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-
-                    }
-                });
-
-            }
-
-            @Override
-            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-
-            }
-
-            @Override
-            public void onChildRemoved(@NonNull DataSnapshot snapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
+        getFriendNameList();
 
 
         //  find user
@@ -227,11 +172,12 @@ public class MainActivity extends AppCompatActivity {
         nameSearch = findViewById(R.id.name);
         btnSearch = findViewById(R.id.btnSearch);
         friendListView = findViewById(R.id.friendList);
+        friendNameList = new ArrayList<>();
         avatar = findViewById(R.id.avatar);
         databaseReference = FirebaseDatabase.getInstance().getReference();
         friendList = new ArrayList<>();
         friendListAdapter = new FriendListAdapter(friendList);
-        friendListView.setLayoutManager(new LinearLayoutManager(this));
+        friendListView.setLayoutManager(new LinearLayoutManager(this , LinearLayoutManager.HORIZONTAL , false));
         friendListView.addItemDecoration(new DividerItemDecoration(this, 0));
         friendListView.setAdapter(friendListAdapter);
         searchFriendDialog = new Dialog(this);
@@ -265,6 +211,92 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    void getFriendList() {
+        getFriendNameList();
+        for (String friendName : friendNameList) {
+            databaseReference.child("Users").child(friendName).addChildEventListener(new ChildEventListener() {
+                @Override
+                public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                    User friend = snapshot.getValue(User.class);
+                    friendList.add(friend);
+                    friendListAdapter.notifyDataSetChanged();
+                }
+
+                @Override
+                public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+                }
+
+                @Override
+                public void onChildRemoved(@NonNull DataSnapshot snapshot) {
+
+                }
+
+                @Override
+                public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
+        }
+    }
+
+    void getFriendNameList() {
+        databaseReference.child("Users").child(username).child("friends").addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                String friendName = snapshot.getValue(String.class);
+                friendNameList.add(friendName);
+                databaseReference.child("Users").child(friendName).addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        User friend = snapshot.getValue(User.class);
+                        int position = friendListAdapter.getPositionById(friend.username);
+                        // check user in list
+                        if (position == -1) {
+                            friendList.add(friend);
+                        } else {
+                            // update state
+                            friendList.get(position).online = friend.online;
+                        }
+
+                        friendListAdapter.notifyDataSetChanged();
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot snapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
     }
 
 
