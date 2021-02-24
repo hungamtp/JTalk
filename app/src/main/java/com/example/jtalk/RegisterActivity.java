@@ -44,7 +44,6 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         repassword = findViewById(R.id.repassword);
         email = findViewById(R.id.email);
         btRegister = findViewById(R.id.btRegister);
-        progressBar = findViewById(R.id.progressBar);
         btRegister.setOnClickListener(this::onClick);
         databaseReference = FirebaseDatabase.getInstance().getReference();
 

@@ -44,7 +44,7 @@ import java.util.HashMap;
 import java.util.List;
 
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener{
     RecyclerView friendListView;
     ArrayList<User> friendList;
     FriendListAdapter friendListAdapter;
@@ -242,7 +242,11 @@ public class MainActivity extends AppCompatActivity {
                         if (position == -1) {
                             friendList.add(friend);
                         } else {
-                            // update state
+                            // update state chat list
+                            int index = chatListAdapter.getPositionById(friend.username);
+                            chatList.get(index).online = friend.online;
+                            chatListAdapter.notifyDataSetChanged();
+                            // update friend list
                             friendList.get(position).online = friend.online;
                         }
 
@@ -293,8 +297,8 @@ public class MainActivity extends AppCompatActivity {
                                if(snapshot.exists()){
                                    Message lastMess = snapshot.getValue(Message.class);
                                    newChat.lastMessages = lastMess.message;
-                                   int postion = chatListAdapter.getPositionById(newChat.username);
-                                   if(postion  == -1){
+                                   int position = chatListAdapter.getPositionById(newChat.username);
+                                   if(position  == -1){
                                        chatList.add(newChat);
                                    }
                                    chatListAdapter.notifyDataSetChanged();
@@ -357,6 +361,12 @@ public class MainActivity extends AppCompatActivity {
     protected void onRestart() {
         super.onRestart();
         loadAvatar();
+
+    }
+
+    @Override
+    public void onClick(View v) {
+
 
     }
 }
