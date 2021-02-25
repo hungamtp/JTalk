@@ -6,11 +6,15 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 
+import com.example.jtalk.model.User;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -21,6 +25,7 @@ import com.google.firebase.database.ValueEventListener;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
     TextView btRegister;
+    TextView forgot;
     Button btLogin;
     EditText username;
     EditText password;
@@ -33,21 +38,26 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         setContentView(R.layout.activity_login);
         init();
         // auto log
-//        username.setText("hungamtp");
+        username.setText("hungamtp");
         password.setText("hunghung");
-//        btLogin.callOnClick();
+
 
 
     }
 
     void init() {
+        firebaseAuth = FirebaseAuth.getInstance();
+        databaseReference = FirebaseDatabase.getInstance().getReference();
         btRegister = findViewById(R.id.btRegister);
         btLogin = findViewById(R.id.btLogin);
         username = findViewById(R.id.username);
         password = findViewById(R.id.password);
-        btRegister.setOnClickListener(this);
-        btLogin.setOnClickListener(this);
-        firebaseAuth = FirebaseAuth.getInstance();
+        forgot = findViewById(R.id.forgot);
+
+        forgot.setOnClickListener(this::onClick);
+        btRegister.setOnClickListener(this::onClick);
+        btLogin.setOnClickListener(this::onClick);
+
     }
 
 
@@ -62,7 +72,42 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             case R.id.btLogin:
                 login();
                 break;
+            case R.id.forgot:
+                forgotPassword();
+                break;
         }
+    }
+
+    private void forgotPassword() {
+
+        databaseReference.child("Users").child(username.getText().toString()).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(snapshot.exists()){
+                    User currentUser = snapshot.getValue(User.class);
+                    firebaseAuth.sendPasswordResetEmail(currentUser.email).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if(task.isComplete()){
+                                Toast.makeText(LoginActivity.this , "get the email" , Toast.LENGTH_LONG).show();
+                                Intent newIntent = new Intent();
+                                newIntent.setClass(LoginActivity.this , ResetPasswordActivity.class);
+                                startActivity(newIntent);
+                            }else{
+                                Toast.makeText(LoginActivity.this , "no email" , Toast.LENGTH_LONG).show();
+                            }
+                        }
+                    });
+                }else{
+
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
 
     private void login() {
@@ -108,6 +153,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
 
     }
+
+
 
     @Override
     protected void onPause() {

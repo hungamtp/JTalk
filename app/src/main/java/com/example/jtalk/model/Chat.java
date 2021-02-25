@@ -6,8 +6,8 @@ public class Chat extends User{
     public Chat() {
     }
 
-    public Chat(String email, String username, String password, String avatar, boolean online, String lastMessages) {
-        super(email, username, password, avatar, online);
+    public Chat( String username, String avatar, boolean online, String lastMessages) {
+        super(username, avatar, online);
         this.lastMessages = lastMessages;
     }
 

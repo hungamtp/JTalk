@@ -3,6 +3,7 @@ package com.example.jtalk;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -17,10 +18,12 @@ import android.graphics.ColorFilter;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -44,7 +47,7 @@ import java.util.HashMap;
 import java.util.List;
 
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener{
+public class MainActivity extends AppCompatActivity  {
     RecyclerView friendListView;
     ArrayList<User> friendList;
     FriendListAdapter friendListAdapter;
@@ -70,7 +73,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         username = intent.getStringExtra("username");
         loadAvatar();
         getFriendList();
-        getChatList();
+        final Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                // Do something after 5s = 5000ms
+                getChatList();
+            }
+        }, 500);
+
 
 
         //  find user
@@ -179,25 +190,35 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     void initView() {
+        databaseReference = FirebaseDatabase.getInstance().getReference();
+        storageReference = FirebaseStorage.getInstance().getReference();
+
         nameSearch = findViewById(R.id.name);
         btnSearch = findViewById(R.id.btnSearch);
         friendListView = findViewById(R.id.friendList);
         avatar = findViewById(R.id.avatar);
         chatListView = findViewById(R.id.chatList);
-        databaseReference = FirebaseDatabase.getInstance().getReference();
+
         friendList = new ArrayList<>();
         friendListAdapter = new FriendListAdapter(friendList);
+        DividerItemDecoration divider_friend_list = new DividerItemDecoration(this, DividerItemDecoration.HORIZONTAL);
+        divider_friend_list.setDrawable(ContextCompat.getDrawable(this, R.drawable.divider_friend_list));
         friendListView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
-        friendListView.addItemDecoration(new DividerItemDecoration(this, 0));
+        friendListView.addItemDecoration(divider_friend_list);
         friendListView.setAdapter(friendListAdapter);
+
+
+        DividerItemDecoration divider_chat_list =
+                new DividerItemDecoration(this, DividerItemDecoration.VERTICAL);
+        divider_chat_list.
+                setDrawable(ContextCompat.getDrawable(this, R.drawable.divider_chat_list));
         chatList = new ArrayList<>();
         chatListAdapter = new ChatListAdapter(chatList);
         chatListView.setLayoutManager(new LinearLayoutManager(this));
-        chatListView.addItemDecoration(new DividerItemDecoration(this , 0));
+        chatListView.addItemDecoration(divider_chat_list);
         chatListView.setAdapter(chatListAdapter);
-        searchFriendDialog = new Dialog(this);
-        storageReference = FirebaseStorage.getInstance().getReference();
 
+        searchFriendDialog = new Dialog(this);
     }
 
     private void addFriend(String currentUsername, String friendUsername) {
@@ -242,10 +263,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         if (position == -1) {
                             friendList.add(friend);
                         } else {
-                            // update state chat list
+                            // update online offline in chat list
                             int index = chatListAdapter.getPositionById(friend.username);
-                            chatList.get(index).online = friend.online;
-                            chatListAdapter.notifyDataSetChanged();
+                            if(index != -1) {
+                                chatList.get(index).online = friend.online;
+                                chatListAdapter.notifyDataSetChanged();
+                            }
                             // update friend list
                             friendList.get(position).online = friend.online;
                         }
@@ -282,79 +305,80 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         });
 
     }
+
     void getChatList() {
-       databaseReference.child("Users").child(username).child("friends").addChildEventListener(new ChildEventListener() {
-           @Override
-           public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-               String friendName = snapshot.getValue(String.class);
-               databaseReference.child("Users").child(friendName).addValueEventListener(new ValueEventListener() {
-                   @Override
-                   public void onDataChange(@NonNull DataSnapshot snapshot) {
-                       Chat newChat = snapshot.getValue(Chat.class);
-                       databaseReference.child("Users").child(username).child("Messages").child(newChat.username).limitToLast(1).addChildEventListener(new ChildEventListener() {
-                           @Override
-                           public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-                               if(snapshot.exists()){
-                                   Message lastMess = snapshot.getValue(Message.class);
-                                   newChat.lastMessages = lastMess.message;
-                                   int position = chatListAdapter.getPositionById(newChat.username);
-                                   if(position  == -1){
-                                       chatList.add(newChat);
-                                   }
-                                   chatListAdapter.notifyDataSetChanged();
-                               }
-                           }
+        databaseReference.child("Users").child(username).child("friends").addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                String friendName = snapshot.getValue(String.class);
+                databaseReference.child("Users").child(friendName).addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        Chat newChat = snapshot.getValue(Chat.class);
+                        databaseReference.child("Users").child(username).child("Messages").child(newChat.username).limitToLast(1).addChildEventListener(new ChildEventListener() {
+                            @Override
+                            public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                                if(snapshot.exists()){
+                                    Message lastMess = snapshot.getValue(Message.class);
+                                    newChat.lastMessages = lastMess.message;
+                                    int position = chatListAdapter.getPositionById(newChat.username);
+                                    if(position  == -1){
+                                        chatList.add(newChat);
+                                    }
+                                    chatListAdapter.notifyDataSetChanged();
+                                }
+                            }
 
-                           @Override
-                           public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                            @Override
+                            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
 
-                           }
+                            }
 
-                           @Override
-                           public void onChildRemoved(@NonNull DataSnapshot snapshot) {
+                            @Override
+                            public void onChildRemoved(@NonNull DataSnapshot snapshot) {
 
-                           }
+                            }
 
-                           @Override
-                           public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                            @Override
+                            public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
 
-                           }
+                            }
 
-                           @Override
-                           public void onCancelled(@NonNull DatabaseError error) {
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
 
-                           }
-                       });
+                            }
+                        });
 
-                   }
+                    }
 
-                   @Override
-                   public void onCancelled(@NonNull DatabaseError error) {
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
 
-                   }
-               });
-           }
+                    }
+                });
+            }
 
-           @Override
-           public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
 
-           }
+            }
 
-           @Override
-           public void onChildRemoved(@NonNull DataSnapshot snapshot) {
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot snapshot) {
 
-           }
+            }
 
-           @Override
-           public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
 
-           }
+            }
 
-           @Override
-           public void onCancelled(@NonNull DatabaseError error) {
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
 
-           }
-       });
+            }
+        });
     }
 
     @Override
@@ -364,11 +388,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
-    @Override
-    public void onClick(View v) {
 
-
-    }
 }
 
 

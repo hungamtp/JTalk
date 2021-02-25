@@ -115,9 +115,11 @@ public class ChatFragment extends Fragment {
         databaseReference.child("Users").child(receiver).child("avatar").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                String avatarLink = snapshot.getValue(String.class);
-                if(!avatarLink.equals("")){
-                    Glide.with(getContext()).load(avatarLink).into(avatar);
+                if(snapshot.exists()) {
+                    String avatarLink = snapshot.getValue(String.class);
+                    if (!avatarLink.equals("")) {
+                        Glide.with(getContext()).load(avatarLink).into(avatar);
+                    }
                 }
             }
             @Override

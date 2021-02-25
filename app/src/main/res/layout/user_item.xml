@@ -35,7 +35,7 @@
             android:layout_height="wrap_content"
             android:text="hung"
             android:textSize="23dp"
-            android:textStyle="bold" />
+            android:textColor="@color/black"/>
 
         <TextView
             android:id="@+id/last_message"

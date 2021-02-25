@@ -18,6 +18,9 @@ public class User {
         this.online = online;
     }
 
+    public User(String username, String avatar, boolean online) {
+    }
+
     public String getEmail() {
         return email;
     }

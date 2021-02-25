@@ -32,7 +32,7 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.ViewHo
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         Context context = parent.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
-        View userView =   inflater.inflate(R.layout.user_item, parent, false);
+        View userView = inflater.inflate(R.layout.user_item, parent, false);
         ViewHolder viewHolder = new ViewHolder(userView);
         return viewHolder;
     }
@@ -50,13 +50,11 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.ViewHo
             // set image when is offline
             holder.online.setImageResource(R.drawable.offline);
         }
-//
         if (!chat.avatar.equals("")) {
             // set avatar
             Glide.with(holder.avatar.getContext()).load(chat.avatar).into(holder.avatar);
         }
-
-
+//
     }
 
     public int getPositionById(String username) {
@@ -69,10 +67,10 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.ViewHo
         return -1;
     }
 
-    public boolean checkUser(String username){
+    public boolean checkUser(String username) {
         boolean result = false;
-        for(User friend : friendList){
-            if(friend.username.equals(username)){
+        for (User friend : friendList) {
+            if (friend.username.equals(username)) {
                 result = true;
                 break;
             }
