@@ -16,6 +16,8 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
@@ -47,6 +49,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
     Button signout ;
     String usernameStr;
     View v;
+    View actionbar;
     boolean isAvatarChanged = false ;
     final int REQUEST_CODE = 1;
 
@@ -77,14 +80,16 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
 
     }
     void initView() {
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayShowCustomEnabled(true);
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setCustomView(R.layout.action_bar_profile_activity);
+        actionbar = ((AppCompatActivity)getActivity()).getSupportActionBar().getCustomView();
         username = v.findViewById(R.id.username);
         avatar = v.findViewById(R.id.avatar);
         avatar.setOnClickListener(this::onClick);
         email = v.findViewById(R.id.email);
-        done = v.findViewById(R.id.done);
-        done.setOnClickListener(this::onClick);
-        cancel = v.findViewById(R.id.cancel);
-        cancel.setOnClickListener(this::onClick);
+        done = actionbar.findViewById(R.id.done);
+        cancel = actionbar.findViewById(R.id.cancel);
         signout = v.findViewById(R.id.sign_out);
         signout.setOnClickListener(this::onClick);
         changPassword = v.findViewById(R.id.change_password);

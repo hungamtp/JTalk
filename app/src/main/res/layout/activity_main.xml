@@ -8,29 +8,7 @@
     android:padding="10dp"
     tools:context=".MainActivity">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
 
-        <EditText
-            android:id="@+id/name"
-            android:layout_width="200dp"
-            android:layout_height="wrap_content" />
-
-        <Button
-            android:id="@+id/btnSearch"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/search" />
-
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/avatar"
-            android:layout_width="fill_parent"
-            android:layout_height="50dp"
-            android:layout_gravity="right"
-            android:src="@drawable/ic_baseline_person_outline_24" />
-    </LinearLayout>
 
     <TextView
         android:layout_width="wrap_content"

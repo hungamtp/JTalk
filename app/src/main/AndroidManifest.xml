@@ -14,11 +14,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.JTalk">
         <activity android:name=".ResetPasswordActivity"></activity>
-        <activity android:name=".ProfileActivity" />
-        <activity android:name=".ChatActivity" />
-        <activity android:name=".MainActivity" />
+        <activity android:name=".ProfileActivity" android:theme="@style/ProfileTheme" />
+        <activity android:name=".ChatActivity" android:theme="@style/Platform.MaterialComponents.Light" />
+        <activity android:name=".MainActivity" android:theme="@style/Platform.MaterialComponents.Light"/>
         <activity
             android:name=".LoginActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
             android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -26,7 +27,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".RegisterActivity" />
+        <activity
+            android:name=".RegisterActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
 
         <meta-data
             android:name="preloaded_fonts"

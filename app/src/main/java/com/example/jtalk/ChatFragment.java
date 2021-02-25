@@ -63,7 +63,6 @@ public class ChatFragment extends Fragment {
     public void onStart() {
         super.onStart();
         view = getView();
-        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
 
         Intent intent = getActivity().getIntent();
         sender = intent.getStringExtra("sender");

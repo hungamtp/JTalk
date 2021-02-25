@@ -1,6 +1,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Theme.JTalk" parent="Theme.MaterialComponents.DayNight.NoActionBar.Bridge">
+    <style name="Theme.JTalk" parent="Theme.MaterialComponents.DayNight.Bridge">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/purple_500</item>
         <item name="colorPrimaryVariant">@color/purple_700</item>
@@ -13,4 +13,10 @@
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
     </style>
+    <style name="ProfileTheme" parent="Platform.MaterialComponents.Light">
+
+        <item name="android:actionBarSize">35dp</item>
+        <item name="actionBarSize">35dp</item>
+    </style>
+
 </resources>

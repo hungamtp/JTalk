@@ -2,6 +2,7 @@ package com.example.jtalk;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.DividerItemDecoration;
@@ -62,11 +63,16 @@ public class MainActivity extends AppCompatActivity  {
     ImageView avatar;
     StorageReference storageReference;
     Intent newIntent;
+    View actionBarView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+        getSupportActionBar().setDisplayShowCustomEnabled(true);
+        getSupportActionBar().setCustomView(R.layout.action_bar_main_activity);
+        actionBarView = getSupportActionBar().getCustomView();
 
         initView();
         Intent intent = getIntent();
@@ -193,10 +199,10 @@ public class MainActivity extends AppCompatActivity  {
         databaseReference = FirebaseDatabase.getInstance().getReference();
         storageReference = FirebaseStorage.getInstance().getReference();
 
-        nameSearch = findViewById(R.id.name);
-        btnSearch = findViewById(R.id.btnSearch);
+        nameSearch = actionBarView.findViewById(R.id.name);
+        btnSearch =actionBarView.findViewById(R.id.btnSearch);
         friendListView = findViewById(R.id.friendList);
-        avatar = findViewById(R.id.avatar);
+        avatar= actionBarView.findViewById(R.id.avatar);
         chatListView = findViewById(R.id.chatList);
 
         friendList = new ArrayList<>();
