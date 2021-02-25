@@ -1,5 +1,6 @@
 package com.example.jtalk;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
@@ -14,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
@@ -45,7 +47,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
     Button signout ;
     String usernameStr;
     View v;
-    boolean isAvatarChanged = false;
+    boolean isAvatarChanged = false ;
     final int REQUEST_CODE = 1;
 
     public ProfileFragment() {
@@ -155,7 +157,6 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
     }
 
     private void done() {
-        databaseReference.child("Users").child(usernameStr).child("email").setValue(email.getText().toString());
         if (isAvatarChanged) {
             databaseReference.child("Users").child(usernameStr).child("image").setValue(true);
             avatar.setDrawingCacheEnabled(true);
@@ -185,5 +186,15 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
             });
         }
         getActivity().finish();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == REQUEST_CODE && resultCode == Activity.RESULT_OK && data != null ){
+            Bitmap bitmap = (Bitmap) data.getExtras().get("data");
+            avatar.setImageBitmap(bitmap);
+            isAvatarChanged = true;
+        }
     }
 }
