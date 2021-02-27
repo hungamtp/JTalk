@@ -14,9 +14,12 @@
         <!-- Customize your theme here. -->
     </style>
     <style name="ProfileTheme" parent="Platform.MaterialComponents.Light">
-
         <item name="android:actionBarSize">35dp</item>
         <item name="actionBarSize">35dp</item>
+    </style>
+    <style name="MainTheme" parent="Platform.MaterialComponents.Light">
+        <item name="android:actionBarSize">40dp</item>
+        <item name="actionBarSize">40dp</item>
     </style>
 
 </resources>

@@ -56,8 +56,8 @@ public class MainActivity extends AppCompatActivity  {
     ChatListAdapter chatListAdapter;
     RecyclerView chatListView;
     DatabaseReference databaseReference;
-    EditText nameSearch;
-    Button btnSearch;
+//    EditText nameSearch;
+//    Button btnSearch;
     Dialog searchFriendDialog;
     String username;
     ImageView avatar;
@@ -91,38 +91,38 @@ public class MainActivity extends AppCompatActivity  {
 
 
         //  find user
-        btnSearch.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Query query = databaseReference.child("Users").orderByChild("username").equalTo(nameSearch.getText().toString());
-                query.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        if (!snapshot.exists()) {
-                            nameSearch.setError("No user found");
-                        } else {
-                            databaseReference.child("Users").child(nameSearch.getText().toString()).addListenerForSingleValueEvent(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                    User friend = snapshot.getValue(User.class);
-                                    showPopup(v, friend);
-                                }
-
-                                @Override
-                                public void onCancelled(@NonNull DatabaseError error) {
-
-                                }
-                            });
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-
-                    }
-                });
-            }
-        });
+//        btnSearch.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Query query = databaseReference.child("Users").orderByChild("username").equalTo(nameSearch.getText().toString());
+//                query.addListenerForSingleValueEvent(new ValueEventListener() {
+//                    @Override
+//                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                        if (!snapshot.exists()) {
+//                            nameSearch.setError("No user found");
+//                        } else {
+//                            databaseReference.child("Users").child(nameSearch.getText().toString()).addListenerForSingleValueEvent(new ValueEventListener() {
+//                                @Override
+//                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                                    User friend = snapshot.getValue(User.class);
+//                                    showPopup(v, friend);
+//                                }
+//
+//                                @Override
+//                                public void onCancelled(@NonNull DatabaseError error) {
+//
+//                                }
+//                            });
+//                        }
+//                    }
+//
+//                    @Override
+//                    public void onCancelled(@NonNull DatabaseError error) {
+//
+//                    }
+//                });
+//            }
+//        });
 
         avatar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -135,57 +135,45 @@ public class MainActivity extends AppCompatActivity  {
         });
     }
 
-    public void showPopup(View v, User friend) {
-        ImageView avatar;
-        TextView friendName;
-        TextView btnClose;
-        Button btnAddFriend;
-        Button btnText;
-        if (!isFriend(nameSearch.getText().toString())) {
-            searchFriendDialog.setContentView(R.layout.popup_search_friend);
-            btnAddFriend = searchFriendDialog.findViewById(R.id.btnAddfriend);
-            btnAddFriend.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    searchFriendDialog.dismiss();
-                    addFriend(username, nameSearch.getText().toString());
-                }
-            });
-        } else searchFriendDialog.setContentView(R.layout.popup_search_friend_been_friend);
-
-        friendName = searchFriendDialog.findViewById(R.id.name);
-        avatar = searchFriendDialog.findViewById(R.id.avatar);
-        btnText = searchFriendDialog.findViewById(R.id.btnText);
-        btnClose = searchFriendDialog.findViewById(R.id.btnClose);
-        Glide.with(this).load(friend.avatar).into(avatar);
-        friendName.setText(friend.username);
-
-
-        btnClose.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                searchFriendDialog.dismiss();
-            }
-        });
-
-        btnText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                newIntent = new Intent();
-                newIntent.setClass(MainActivity.this, ChatActivity.class);
-                newIntent.putExtra("sender", username);
-                newIntent.putExtra("receiver", nameSearch.getText().toString());
-                searchFriendDialog.dismiss();
-                startActivity(newIntent);
-            }
-        });
+//    public void showPopup(View v, User friend) {
+//        ImageView avatar;
+//        TextView friendName;
+//        TextView btnClose;
+//        Button btnAddFriend;
+//        Button btnText;
+//        if (!isFriend(nameSearch.getText().toString())) {
+//            searchFriendDialog.setContentView(R.layout.popup_search_friend);
+//            btnAddFriend = searchFriendDialog.findViewById(R.id.btnAddfriend);
+//            btnAddFriend.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    searchFriendDialog.dismiss();
+//                    addFriend(username, nameSearch.getText().toString());
+//                }
+//            });
+//        } else searchFriendDialog.setContentView(R.layout.popup_search_friend_been_friend);
+//
+//        friendName = searchFriendDialog.findViewById(R.id.name);
+//        avatar = searchFriendDialog.findViewById(R.id.avatar);
+//        btnText = searchFriendDialog.findViewById(R.id.btnText);
+//        btnClose = searchFriendDialog.findViewById(R.id.btnClose);
+//        Glide.with(this).load(friend.avatar).into(avatar);
+//        friendName.setText(friend.username);
+//
+//
+//        btnClose.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                searchFriendDialog.dismiss();
+//            }
+//        });
 
 
-        searchFriendDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        searchFriendDialog.show();
+//        searchFriendDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+//        searchFriendDialog.show();
 
 
-    }
+  //  }
 
     boolean isFriend(String friendName) {
         boolean isFriend = false;
@@ -198,9 +186,9 @@ public class MainActivity extends AppCompatActivity  {
     void initView() {
         databaseReference = FirebaseDatabase.getInstance().getReference();
         storageReference = FirebaseStorage.getInstance().getReference();
-
-        nameSearch = actionBarView.findViewById(R.id.name);
-        btnSearch =actionBarView.findViewById(R.id.btnSearch);
+//
+//        nameSearch = actionBarView.findViewById(R.id.name);
+//        btnSearch =actionBarView.findViewById(R.id.btnSearch);
         friendListView = findViewById(R.id.friendList);
         avatar= actionBarView.findViewById(R.id.avatar);
         chatListView = findViewById(R.id.chatList);

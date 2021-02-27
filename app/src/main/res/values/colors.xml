@@ -11,4 +11,5 @@
     <color name="offline">#40000000</color>
     <color name="message">#609191</color>
     <color name="divider">#FAFAFA</color>
+    <color name="search">#F0F0F0</color>
 </resources>
