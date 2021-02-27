@@ -5,7 +5,10 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,10 +35,10 @@ import java.util.ArrayList;
 
 public class ChatFragment extends Fragment {
     View view;
-    String sender ;
+    String sender;
     String receiver;
-    ArrayList<Message> messagesList ;
-    ListView messageListView ;
+    ArrayList<Message> messagesList;
+    ListView messageListView;
     MessageAdapter messageAdapter;
     Button btnSend;
     EditText message;
@@ -43,6 +46,7 @@ public class ChatFragment extends Fragment {
     ImageView avatar;
     DatabaseReference databaseReference;
     TextView friendName;
+    View actionbar;
 
     public ChatFragment() {
 
@@ -63,7 +67,6 @@ public class ChatFragment extends Fragment {
     public void onStart() {
         super.onStart();
         view = getView();
-
         initView();
         loadAvatar();
         loadMessage();
@@ -71,10 +74,10 @@ public class ChatFragment extends Fragment {
         btnSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Message sendedMessage = new Message(sender , receiver , message.getText().toString() , true);
+                Message sendedMessage = new Message(sender, receiver, message.getText().toString(), true);
                 databaseReference.child("Users").child(sender).child("Messages").child(receiver).push().setValue(sendedMessage);
 
-                Message receiverMessage = new Message(sender , receiver , message.getText().toString() , false);
+                Message receiverMessage = new Message(sender, receiver, message.getText().toString(), false);
                 databaseReference.child("Users").child(receiver).child("Messages").child(sender).push().setValue(receiverMessage);
 
                 message.clearFocus();
@@ -86,37 +89,53 @@ public class ChatFragment extends Fragment {
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getActivity().finish();
+                Navigation.findNavController(getView()).navigate(R.id.chatToMain);
             }
         });
-        
+
     }
-    void initView(){
-        messagesList = new ArrayList<>();
-        back = view.findViewById(R.id.back);
-        messageAdapter = new MessageAdapter(messagesList);
+
+    void initView() {
+        //get action bar
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayShowCustomEnabled(true);
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setCustomView(R.layout.action_bar_chat_fragment);
+        actionbar = ((AppCompatActivity) getActivity()).getSupportActionBar().getCustomView();
+
+        // action bar view
+        avatar = actionbar.findViewById(R.id.avatar);
+        back = actionbar.findViewById(R.id.back);
+        friendName = actionbar.findViewById(R.id.friendName);
+
+        // init view
         messageListView = view.findViewById(R.id.messageListView);
-        avatar= view.findViewById(R.id.avatar);
-        messageListView.setAdapter(messageAdapter);
         btnSend = view.findViewById(R.id.btnSend);
         message = view.findViewById(R.id.message);
-        friendName = view.findViewById(R.id.friendName);
+
         friendName.setText(receiver);
+
+        messagesList = new ArrayList<>();
+        messageAdapter = new MessageAdapter(messagesList);
+        messageListView.setAdapter(messageAdapter);
+
+
+        // firebase
         databaseReference = FirebaseDatabase.getInstance().getReference();
     }
 
-    void loadAvatar(){
+    void loadAvatar() {
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
         databaseReference.child("Users").child(receiver).child("avatar").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if(snapshot.exists()) {
+                if (snapshot.exists()) {
                     String avatarLink = snapshot.getValue(String.class);
                     if (!avatarLink.equals("")) {
                         Glide.with(getContext()).load(avatarLink).into(avatar);
                     }
                 }
             }
+
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
 
@@ -124,7 +143,7 @@ public class ChatFragment extends Fragment {
         });
     }
 
-    void loadMessage(){
+    void loadMessage() {
         // fetch Message from firebase
         databaseReference.child("Users").child(sender).child("Messages").child(receiver).addChildEventListener(new ChildEventListener() {
             @Override
@@ -157,6 +176,7 @@ public class ChatFragment extends Fragment {
 
 
     }
+
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);

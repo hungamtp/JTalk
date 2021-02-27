@@ -47,7 +47,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
     TextView email;
     TextView changPassword;
     TextView done;
-    ImageView cancel;
+    ImageView back;
     ImageView avatar;
     Button signOut;
 
@@ -97,7 +97,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         // init view in actionbar
         done = actionbar.findViewById(R.id.done);
 
-        cancel = actionbar.findViewById(R.id.cancel);
+        back = actionbar.findViewById(R.id.back);
 
         // init view
         changPassword = v.findViewById(R.id.change_password);
@@ -114,6 +114,13 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
             @Override
             public void onClick(View v) {
                 done();
+            }
+        });
+
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Navigation.findNavController(getView()).navigate(R.id.profileToMain);
             }
         });
 
