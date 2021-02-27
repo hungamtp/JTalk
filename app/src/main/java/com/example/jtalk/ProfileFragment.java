@@ -36,7 +36,7 @@ import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
 
-public class ProfileFragment extends Fragment implements View.OnClickListener{
+public class ProfileFragment extends Fragment implements View.OnClickListener {
     FirebaseStorage storage;
     DatabaseReference databaseReference;
     StorageReference storageReference;
@@ -46,11 +46,11 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
     TextView done;
     TextView cancel;
     ImageView avatar;
-    Button signout ;
+    Button signout;
     String usernameStr;
     View v;
     View actionbar;
-    boolean isAvatarChanged = false ;
+    boolean isAvatarChanged = false;
     final int REQUEST_CODE = 1;
 
     public ProfileFragment() {
@@ -74,16 +74,15 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
         super.onStart();
         v = getView();
         initView();
-        Intent intent = getActivity().getIntent();
-        usernameStr = intent.getStringExtra("username");
         loadProfile();
 
     }
+
     void initView() {
-        ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
-        ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayShowCustomEnabled(true);
-        ((AppCompatActivity)getActivity()).getSupportActionBar().setCustomView(R.layout.action_bar_profile_activity);
-        actionbar = ((AppCompatActivity)getActivity()).getSupportActionBar().getCustomView();
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayShowCustomEnabled(true);
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setCustomView(R.layout.action_bar_profile_activity);
+        actionbar = ((AppCompatActivity) getActivity()).getSupportActionBar().getCustomView();
         username = v.findViewById(R.id.username);
         avatar = v.findViewById(R.id.avatar);
         avatar.setOnClickListener(this::onClick);
@@ -98,6 +97,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
         storage = FirebaseStorage.getInstance("gs://timer-34f5a.appspot.com");
 
     }
+
     void loadProfile() {
         // check avatar exist
         databaseReference.child("Users").child(usernameStr).addListenerForSingleValueEvent(new ValueEventListener() {
@@ -107,7 +107,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
                     User userProfile = snapshot.getValue(User.class);
                     username.setText(userProfile.username);
                     email.setText(userProfile.email);
-                    if(!userProfile.avatar.equals("")) {
+                    if (!userProfile.avatar.equals("")) {
                         Glide.with(getActivity().getBaseContext()).load(userProfile.avatar).into(avatar);
                     }
                 }
@@ -124,7 +124,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.done:
                 done();
                 break;
@@ -140,7 +140,8 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
         }
 
     }
-    void signOut(){
+
+    void signOut() {
 
 
         databaseReference.child("Users").child(usernameStr).child("online").setValue(false);
@@ -196,10 +197,20 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == REQUEST_CODE && resultCode == Activity.RESULT_OK && data != null ){
+        if (requestCode == REQUEST_CODE && resultCode == Activity.RESULT_OK && data != null) {
             Bitmap bitmap = (Bitmap) data.getExtras().get("data");
             avatar.setImageBitmap(bitmap);
             isAvatarChanged = true;
         }
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        if (getArguments() != null) {
+            ProfileFragmentArgs args = ProfileFragmentArgs.fromBundle(getArguments());
+            usernameStr = args.getUsername();
+        }
+
     }
 }
