@@ -13,7 +13,6 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.example.jtalk.ChatActivity;
 import com.example.jtalk.R;
 import com.example.jtalk.model.User;
 
@@ -100,7 +99,7 @@ public class FriendListAdapter extends RecyclerView.Adapter<FriendListAdapter.Vi
                 @Override
                 public void onClick(View v) {
                     Intent intent = ((Activity) v.getContext()).getIntent();
-                    intent.setClass(v.getContext(), ChatActivity.class);
+//                    intent.setClass(v.getContext(), ChatActivity.class);
                     intent.putExtra("receiver", username.getText().toString());
                     intent.putExtra("sender", intent.getStringExtra("username"));
                     v.getContext().startActivity(intent);

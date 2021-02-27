@@ -64,10 +64,6 @@ public class ChatFragment extends Fragment {
         super.onStart();
         view = getView();
 
-        Intent intent = getActivity().getIntent();
-        sender = intent.getStringExtra("sender");
-        receiver = intent.getStringExtra("receiver");
-
         initView();
         loadAvatar();
         loadMessage();
@@ -159,6 +155,16 @@ public class ChatFragment extends Fragment {
             }
         });
 
+
+    }
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        if (getArguments() != null) {
+            ChatFragmentArgs args = ChatFragmentArgs.fromBundle(getArguments());
+            sender = args.getSender();
+            receiver = args.getReceiver();
+        }
 
     }
 }

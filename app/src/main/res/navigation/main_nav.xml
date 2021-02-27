@@ -11,22 +11,49 @@
         android:label="MainFragment" >
         <action
             android:id="@+id/mainToProfile"
-            app:destination="@id/profileFragment2" />
+            app:destination="@id/profileFragment"
+            app:enterAnim="@anim/fragment_fade_enter"
+            app:exitAnim="@anim/fragment_close_exit" />
         <action
             android:id="@+id/mainToChat"
-            app:destination="@id/chatActivity" />
+            app:destination="@id/chatFragment" />
+        <action
+            android:id="@+id/action_mainFragment_to_searchFragment"
+            app:destination="@id/searchFragment" />
     </fragment>
-    <activity
-        android:id="@+id/chatActivity"
-        android:name="com.example.jtalk.ChatActivity"
-        android:label="fragment_chat"
-        tools:layout="@layout/fragment_chat" />
     <fragment
-        android:id="@+id/profileFragment2"
+        android:id="@+id/profileFragment"
         android:name="com.example.jtalk.ProfileFragment"
         android:label="ProfileFragment" >
         <argument
             android:name="username"
             app:argType="string" />
+        <action
+            android:id="@+id/action_profileFragment2_to_mainFragment"
+            app:destination="@id/mainFragment" />
     </fragment>
+    <fragment android:id="@+id/chatFragment"
+        android:name="com.example.jtalk.ChatFragment"
+        android:label="ChatFragment">
+
+        <action
+            android:id="@+id/chatToMain"
+            app:destination="@id/mainFragment" />
+        <argument
+            android:name="sender"
+            app:argType="string" />
+        <argument
+            android:name="receiver"
+            app:argType="string" />
+    </fragment>
+    <fragment android:id="@+id/searchFragment"
+        android:name="com.example.jtalk.SearchFragment"
+        android:label="SearchFragment">
+
+        <action
+            android:id="@+id/action_searchFragment_to_mainFragment"
+            app:destination="@id/mainFragment" />
+    </fragment>
+
+
 </navigation>

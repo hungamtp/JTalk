@@ -59,7 +59,6 @@ public class MainFragment extends Fragment {
     View view;
 
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -76,11 +75,11 @@ public class MainFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
-        ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayShowCustomEnabled(true);
-        ((AppCompatActivity)getActivity()).getSupportActionBar().setCustomView(R.layout.action_bar_main_activity);
-        actionBarView = ((AppCompatActivity)getActivity()).getSupportActionBar().getCustomView();
-        
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayShowCustomEnabled(true);
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setCustomView(R.layout.action_bar_main_activity);
+        actionBarView = ((AppCompatActivity) getActivity()).getSupportActionBar().getCustomView();
+
         initView();
         Intent intent = getActivity().getIntent();
         username = intent.getStringExtra("username");
@@ -98,10 +97,6 @@ public class MainFragment extends Fragment {
         avatar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                Intent profileIntent = new Intent();
-//                profileIntent.putExtra("username", username);
-//                profileIntent.setClass(getContext(), ProfileActivity.class);
-//                startActivity(profileIntent);
                 MainFragmentDirections.MainToProfile mainToProfile = MainFragmentDirections.mainToProfile(username);
                 mainToProfile.setUsername(username);
                 navController.navigate(mainToProfile);
@@ -113,13 +108,13 @@ public class MainFragment extends Fragment {
     void initView() {
         databaseReference = FirebaseDatabase.getInstance().getReference();
         storageReference = FirebaseStorage.getInstance().getReference();
-        
-        view = getView();
-        
-        friendListView = view.findViewById(R.id.friendList);
-        avatar= actionBarView.findViewById(R.id.avatar);
-        chatListView =view.findViewById(R.id.chatList);
 
+        view = getView();
+
+        avatar = actionBarView.findViewById(R.id.avatar);
+
+    // set up friend list
+        friendListView = view.findViewById(R.id.friendList);
         friendList = new ArrayList<>();
         friendListAdapter = new FriendListAdapter(friendList);
         DividerItemDecoration divider_friend_list = new DividerItemDecoration(getContext(), DividerItemDecoration.HORIZONTAL);
@@ -128,11 +123,12 @@ public class MainFragment extends Fragment {
         friendListView.addItemDecoration(divider_friend_list);
         friendListView.setAdapter(friendListAdapter);
 
-
+    //set up chat list
         DividerItemDecoration divider_chat_list =
                 new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL);
         divider_chat_list.
                 setDrawable(ContextCompat.getDrawable(getContext(), R.drawable.divider_chat_list));
+        chatListView = view.findViewById(R.id.chatList);
         chatList = new ArrayList<>();
         chatListAdapter = new ChatListAdapter(chatList);
         chatListView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -186,7 +182,7 @@ public class MainFragment extends Fragment {
                         } else {
                             // update online offline in chat list
                             int index = chatListAdapter.getPositionById(friend.username);
-                            if(index != -1) {
+                            if (index != -1) {
                                 chatList.get(index).online = friend.online;
                                 chatListAdapter.notifyDataSetChanged();
                             }
@@ -239,11 +235,11 @@ public class MainFragment extends Fragment {
                         databaseReference.child("Users").child(username).child("Messages").child(newChat.username).limitToLast(1).addChildEventListener(new ChildEventListener() {
                             @Override
                             public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-                                if(snapshot.exists()){
+                                if (snapshot.exists()) {
                                     Message lastMess = snapshot.getValue(Message.class);
                                     newChat.lastMessages = lastMess.message;
                                     int position = chatListAdapter.getPositionById(newChat.username);
-                                    if(position  == -1){
+                                    if (position == -1) {
                                         chatList.add(newChat);
                                     }
                                     chatListAdapter.notifyDataSetChanged();

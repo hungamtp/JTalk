@@ -10,10 +10,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.example.jtalk.ChatActivity;
+import com.example.jtalk.MainFragmentDirections;
 import com.example.jtalk.R;
 import com.example.jtalk.model.Chat;
 import com.example.jtalk.model.User;
@@ -100,11 +102,12 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.ViewHo
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    final NavController navController = Navigation.findNavController(v);
                     Intent intent = ((Activity) v.getContext()).getIntent();
-                    intent.setClass(v.getContext(), ChatActivity.class);
-                    intent.putExtra("receiver", username.getText().toString());
-                    intent.putExtra("sender", intent.getStringExtra("username"));
-                    v.getContext().startActivity(intent);
+                    MainFragmentDirections.MainToChat mainToChat = MainFragmentDirections.mainToChat(intent.getStringExtra("username"), username.getText().toString());
+                    mainToChat.setSender(intent.getStringExtra("username"));
+                    mainToChat.setReceiver(username.getText().toString());
+                    navController.navigate(mainToChat);
                 }
             });
             lastmessage = itemView.findViewById(R.id.last_message);
