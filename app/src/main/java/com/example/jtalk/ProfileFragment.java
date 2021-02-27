@@ -13,12 +13,14 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 
 import com.bumptech.glide.Glide;
 import com.example.jtalk.model.User;
@@ -40,13 +42,15 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
     FirebaseStorage storage;
     DatabaseReference databaseReference;
     StorageReference storageReference;
+
     TextView username;
     TextView email;
     TextView changPassword;
     TextView done;
-    TextView cancel;
+    ImageView cancel;
     ImageView avatar;
-    Button signout;
+    Button signOut;
+
     String usernameStr;
     View v;
     View actionbar;
@@ -79,22 +83,54 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
     }
 
     void initView() {
+        // get action bar
         ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
         ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayShowCustomEnabled(true);
         ((AppCompatActivity) getActivity()).getSupportActionBar().setCustomView(R.layout.action_bar_profile_activity);
         actionbar = ((AppCompatActivity) getActivity()).getSupportActionBar().getCustomView();
+        actionbar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getContext() , "cliked" , Toast.LENGTH_LONG).show();
+            }
+        });
+        // init view in actionbar
+        done = actionbar.findViewById(R.id.done);
+
+        cancel = actionbar.findViewById(R.id.cancel);
+
+        // init view
+        changPassword = v.findViewById(R.id.change_password);
         username = v.findViewById(R.id.username);
         avatar = v.findViewById(R.id.avatar);
-        avatar.setOnClickListener(this::onClick);
         email = v.findViewById(R.id.email);
-        done = actionbar.findViewById(R.id.done);
-        cancel = actionbar.findViewById(R.id.cancel);
-        signout = v.findViewById(R.id.sign_out);
-        signout.setOnClickListener(this::onClick);
-        changPassword = v.findViewById(R.id.change_password);
+        signOut = v.findViewById(R.id.sign_out);
+
+        // set on click
+        avatar.setOnClickListener(this::onClick);
+        signOut.setOnClickListener(this::onClick);
+
+        done.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                done();
+            }
+        });
+
+//        cancel.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                cancel();
+//            }
+//        });
+
+        // set up firebase
         storageReference = FirebaseStorage.getInstance().getReference();
         databaseReference = FirebaseDatabase.getInstance().getReference();
         storage = FirebaseStorage.getInstance("gs://timer-34f5a.appspot.com");
+
+
+
 
     }
 
@@ -125,12 +161,6 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.done:
-                done();
-                break;
-            case R.id.cancel:
-                cancel();
-                break;
             case R.id.avatar:
                 getAvatar();
                 break;
@@ -158,7 +188,6 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
     }
 
     private void cancel() {
-
         getActivity().finish();
     }
 
@@ -191,7 +220,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
                 }
             });
         }
-        getActivity().finish();
+        Navigation.findNavController(getView()).navigate(R.id.profileToMain);
     }
 
     @Override

@@ -29,7 +29,7 @@
             android:name="username"
             app:argType="string" />
         <action
-            android:id="@+id/action_profileFragment2_to_mainFragment"
+            android:id="@+id/profileToMain"
             app:destination="@id/mainFragment" />
     </fragment>
     <fragment android:id="@+id/chatFragment"

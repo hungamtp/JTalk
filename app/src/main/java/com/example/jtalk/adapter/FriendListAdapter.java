@@ -10,9 +10,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.jtalk.MainFragmentDirections;
 import com.example.jtalk.R;
 import com.example.jtalk.model.User;
 
@@ -30,7 +33,7 @@ public class FriendListAdapter extends RecyclerView.Adapter<FriendListAdapter.Vi
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         Context context = parent.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
-        View userView =   inflater.inflate(R.layout.user_item_in_vertical, parent, false);
+        View userView = inflater.inflate(R.layout.user_item_in_vertical, parent, false);
         ViewHolder viewHolder = new ViewHolder(userView);
         return viewHolder;
     }
@@ -60,16 +63,16 @@ public class FriendListAdapter extends RecyclerView.Adapter<FriendListAdapter.Vi
         int index = 0;
         for (User x : friendList) {
             if (x.username.equals(username)) {
-               return index;
+                return index;
             } else index++;
         }
         return -1;
     }
 
-    public boolean checkUser(String username){
+    public boolean checkUser(String username) {
         boolean result = false;
-        for(User friend : friendList){
-            if(friend.username.equals(username)){
+        for (User friend : friendList) {
+            if (friend.username.equals(username)) {
                 result = true;
                 break;
             }
@@ -99,10 +102,13 @@ public class FriendListAdapter extends RecyclerView.Adapter<FriendListAdapter.Vi
                 @Override
                 public void onClick(View v) {
                     Intent intent = ((Activity) v.getContext()).getIntent();
-//                    intent.setClass(v.getContext(), ChatActivity.class);
-                    intent.putExtra("receiver", username.getText().toString());
-                    intent.putExtra("sender", intent.getStringExtra("username"));
-                    v.getContext().startActivity(intent);
+
+                    // pass argument to chatfragment
+                    final NavController navController = Navigation.findNavController(v);
+                    MainFragmentDirections.MainToChat mainToChat = MainFragmentDirections.mainToChat(intent.getStringExtra("username"), username.getText().toString());
+                    mainToChat.setSender(intent.getStringExtra("username"));
+                    mainToChat.setReceiver(username.getText().toString());
+                    navController.navigate(mainToChat);
                 }
             });
 
