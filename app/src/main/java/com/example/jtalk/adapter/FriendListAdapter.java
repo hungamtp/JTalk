@@ -33,7 +33,7 @@ public class FriendListAdapter extends RecyclerView.Adapter<FriendListAdapter.Vi
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         Context context = parent.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
-        View userView = inflater.inflate(R.layout.user_item_in_vertical, parent, false);
+        View userView = inflater.inflate(R.layout.user_item_in_friend_list, parent, false);
         ViewHolder viewHolder = new ViewHolder(userView);
         return viewHolder;
     }

@@ -28,6 +28,10 @@ public class SearchAdapter extends BaseAdapter {
 
     }
 
+    public List<User> getUserList() {
+        return userList;
+    }
+
     @Override
     public int getCount() {
         return resultList.size();
@@ -57,7 +61,9 @@ public class SearchAdapter extends BaseAdapter {
 
         // binding data
         ((TextView) userView.findViewById(R.id.username)).setText(user.username);
-        Glide.with(parent.getContext()).load(user.avatar).into((CircleImageView) userView.findViewById(R.id.avatar));
+        if(!user.avatar.equals("")){
+            Glide.with(parent.getContext()).load(user.avatar).into((CircleImageView) userView.findViewById(R.id.avatar));
+        }
 
         return userView;
     }
@@ -69,14 +75,13 @@ public class SearchAdapter extends BaseAdapter {
     }
 
     public void filter(String searchText) {
-        Locale locale = new Locale("EN");
-        searchText = searchText.toLowerCase(locale);
-        if (searchText.isEmpty()) {
+
+        if (searchText.isEmpty() || searchText.equals("")) {
             resultList.addAll(userList);
         } else {
             resultList.clear();
             for (User user : userList) {
-                if (user.username.toLowerCase(locale).contains(searchText)) {
+                if (user.username.toLowerCase().contains(searchText.toLowerCase())) {
                     resultList.add(user);
                 }
             }

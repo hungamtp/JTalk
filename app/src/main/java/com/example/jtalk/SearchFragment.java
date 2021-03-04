@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.example.jtalk.adapter.SearchAdapter;
 import com.example.jtalk.model.User;
@@ -65,6 +66,7 @@ public class SearchFragment extends Fragment implements  SearchView.OnQueryTextL
                 if(snapshot.exists()){
                     User user = snapshot.getValue(User.class);
                     userList.add(user);
+                    searchAdapter.getUserList().add(user);
                     searchAdapter.notifyDataSetChanged();
                 }
             }
@@ -123,7 +125,8 @@ public class SearchFragment extends Fragment implements  SearchView.OnQueryTextL
 
     @Override
     public boolean onQueryTextChange(String newText) {
-        searchAdapter.filter(newText);
+        String text = newText;
+        searchAdapter.filter(text);
         return false;
     }
 }
