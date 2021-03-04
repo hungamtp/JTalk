@@ -4,12 +4,14 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -49,12 +51,20 @@ public class SearchFragment extends Fragment implements  SearchView.OnQueryTextL
         getAllUser();
         searchView.setOnQueryTextListener(this);
 
+        userListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String name = userList.get(position).username;
+            }
+        });
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+        ((AppCompatActivity) getActivity()).getSupportActionBar().hide();
         View view= inflater.inflate(R.layout.fragment_search, container, false);
         return  view;
     }
@@ -128,5 +138,11 @@ public class SearchFragment extends Fragment implements  SearchView.OnQueryTextL
         String text = newText;
         searchAdapter.filter(text);
         return false;
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        ((AppCompatActivity) getActivity()).getSupportActionBar().show();
     }
 }

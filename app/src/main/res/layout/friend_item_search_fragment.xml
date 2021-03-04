@@ -12,6 +12,7 @@
             android:id="@+id/avatar"
             android:layout_width="60dp"
             android:layout_height="60dp"
+            android:layout_marginRight="10dp"
             android:src="@drawable/ic_baseline_person_outline_24" />
 
         <TextView
