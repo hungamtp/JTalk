@@ -18,8 +18,8 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class SearchAdapter extends BaseAdapter {
 
-    private List<User> userList ;
-    private List<User> resultList ;
+    List<User> userList;
+    List<User> resultList;
 
     public SearchAdapter(List<User> resultList) {
         userList = new ArrayList<>();
@@ -62,7 +62,7 @@ public class SearchAdapter extends BaseAdapter {
         return userView;
     }
 
-    public void noticeDataChanged(){
+    public void noticeDataChanged() {
         resultList.clear();
         resultList.addAll(userList);
         notifyDataSetChanged();
@@ -76,7 +76,7 @@ public class SearchAdapter extends BaseAdapter {
         } else {
             resultList.clear();
             for (User user : userList) {
-                if (user.username.contains(searchText)) {
+                if (user.username.toLowerCase(locale).contains(searchText)) {
                     resultList.add(user);
                 }
             }
