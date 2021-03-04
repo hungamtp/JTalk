@@ -88,12 +88,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayShowCustomEnabled(true);
         ((AppCompatActivity) getActivity()).getSupportActionBar().setCustomView(R.layout.action_bar_profile_activity);
         actionbar = ((AppCompatActivity) getActivity()).getSupportActionBar().getCustomView();
-        actionbar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(getContext() , "cliked" , Toast.LENGTH_LONG).show();
-            }
-        });
+
         // init view in actionbar
         done = actionbar.findViewById(R.id.done);
 
@@ -124,12 +119,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
             }
         });
 
-//        cancel.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                cancel();
-//            }
-//        });
+
 
         // set up firebase
         storageReference = FirebaseStorage.getInstance().getReference();

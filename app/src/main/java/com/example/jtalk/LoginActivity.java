@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,6 +32,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     EditText password;
     FirebaseAuth firebaseAuth;
     DatabaseReference databaseReference;
+    ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,7 +45,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         password.setText("hunghung");
 
 
-
     }
 
     void init() {
@@ -54,6 +55,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         username = findViewById(R.id.username);
         password = findViewById(R.id.password);
         forgot = findViewById(R.id.forgot);
+        progressBar = findViewById(R.id.progress);
+
 
         forgot.setOnClickListener(this::onClick);
         btRegister.setOnClickListener(this::onClick);
@@ -71,6 +74,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 startActivity(intent);
                 break;
             case R.id.btLogin:
+
+                progressBar.setVisibility(View.VISIBLE);
+               // Toast.makeText(LoginActivity.this ,  "clicked" , Toast.LENGTH_LONG).show();
                 login();
                 break;
             case R.id.forgot:
@@ -160,6 +166,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     @Override
     protected void onPause() {
         super.onPause();
+        progressBar.setVisibility(View.INVISIBLE);
         finish();
     }
 }

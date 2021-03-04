@@ -43,7 +43,7 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.ViewHo
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Chat chat = friendList.get(position);
         holder.username.setText(chat.username);
-        holder.lastmessage.setText(chat.lastMessages);
+        holder.lastMessage.setText(chat.lastMessages);
 
         if (chat.online) {
             // set image when is online
@@ -88,12 +88,24 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.ViewHo
     public String getItemUsername(int position) {
         return friendList.get(position).username;
     }
+    public void newMessage(int oldPosition){
+
+        for(int i = oldPosition ; i >= 1 ; i--){
+            friendList.set(i, friendList.get(i-1));
+        }
+        friendList.set(0 , friendList.get(oldPosition));
+
+    }
+
+//    public TextView getLastMessage(){
+//        return ViewHolder.lastMessage;
+//    }
 
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         TextView username;
-        TextView lastmessage;
+        public TextView lastMessage;
         ImageView avatar;
         ImageView online;
 
@@ -110,10 +122,14 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.ViewHo
                     navController.navigate(mainToChat);
                 }
             });
-            lastmessage = itemView.findViewById(R.id.last_message);
+            lastMessage = itemView.findViewById(R.id.last_message);
             username = itemView.findViewById(R.id.username);
             avatar = itemView.findViewById(R.id.avatar);
             online = itemView.findViewById(R.id.online);
+
+        }
+        public TextView getLastMessage(){
+            return lastMessage;
         }
     }
 

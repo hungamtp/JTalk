@@ -36,14 +36,15 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
-        getActionBar().setDisplayShowHomeEnabled(false);
 
         mAuth = FirebaseAuth.getInstance();
+
 
         username = findViewById(R.id.username);
         password = findViewById(R.id.password);
         repassword = findViewById(R.id.repassword);
         email = findViewById(R.id.email);
+        progressBar = findViewById(R.id.progress);
         btRegister = findViewById(R.id.btRegister);
         btRegister.setOnClickListener(this::onClick);
         databaseReference = FirebaseDatabase.getInstance().getReference();
@@ -54,6 +55,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.btRegister:
+                progressBar.setVisibility(View.VISIBLE);
                 register();
                 break;
         }
@@ -159,5 +161,9 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         });
     }
 
-
+    @Override
+    protected void onPause() {
+        super.onPause();
+        progressBar.setVisibility(View.INVISIBLE);
+    }
 }

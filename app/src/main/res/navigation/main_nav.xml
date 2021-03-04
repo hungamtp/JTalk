@@ -12,13 +12,13 @@
         <action
             android:id="@+id/mainToProfile"
             app:destination="@id/profileFragment"
-            app:enterAnim="@anim/fragment_fade_enter"
-            app:exitAnim="@anim/fragment_close_exit" />
+            app:enterAnim="@android:anim/slide_out_right"
+            app:exitAnim="@android:anim/slide_in_left" />
         <action
             android:id="@+id/mainToChat"
             app:destination="@id/chatFragment" />
         <action
-            android:id="@+id/action_mainFragment_to_searchFragment"
+            android:id="@+id/mainToSearch"
             app:destination="@id/searchFragment" />
     </fragment>
     <fragment
@@ -30,7 +30,9 @@
             app:argType="string" />
         <action
             android:id="@+id/profileToMain"
-            app:destination="@id/mainFragment" />
+            app:destination="@id/mainFragment"
+            app:enterAnim="@android:anim/slide_in_left"
+            app:exitAnim="@android:anim/slide_out_right" />
     </fragment>
     <fragment android:id="@+id/chatFragment"
         android:name="com.example.jtalk.ChatFragment"
@@ -51,7 +53,7 @@
         android:label="SearchFragment">
 
         <action
-            android:id="@+id/action_searchFragment_to_mainFragment"
+            android:id="@+id/searchToMain"
             app:destination="@id/mainFragment" />
     </fragment>
 

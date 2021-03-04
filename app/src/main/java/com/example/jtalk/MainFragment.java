@@ -21,6 +21,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.jtalk.adapter.ChatListAdapter;
@@ -51,9 +52,9 @@ public class MainFragment extends Fragment {
     DatabaseReference databaseReference;
     Dialog searchFriendDialog;
     String username;
+    TextView search_bar;
     ImageView avatar;
     StorageReference storageReference;
-    Intent newIntent;
     View actionBarView;
     View view;
 
@@ -74,16 +75,14 @@ public class MainFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayShowCustomEnabled(true);
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setCustomView(R.layout.action_bar_main_activity);
-        actionBarView = ((AppCompatActivity) getActivity()).getSupportActionBar().getCustomView();
-
         initView();
+
         Intent intent = getActivity().getIntent();
         username = intent.getStringExtra("username");
+
         loadAvatar();
         getFriendList();
+
         final Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override
@@ -92,6 +91,7 @@ public class MainFragment extends Fragment {
                 getChatList();
             }
         }, 500);
+
         final NavController navController = Navigation.findNavController(getView());
         avatar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -101,18 +101,34 @@ public class MainFragment extends Fragment {
                 navController.navigate(mainToProfile);
             }
         });
+
+        search_bar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Navigation.findNavController(view).navigate(R.id.mainToSearch);
+            }
+        });
+
     }
 
 
     void initView() {
+        // action bar
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayShowCustomEnabled(true);
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setCustomView(R.layout.action_bar_main_activity);
+        actionBarView = ((AppCompatActivity) getActivity()).getSupportActionBar().getCustomView();
+        // view in action bar
+        avatar = actionBarView.findViewById(R.id.avatar);
+        search_bar = actionBarView.findViewById(R.id.search_bar);
+
         databaseReference = FirebaseDatabase.getInstance().getReference();
         storageReference = FirebaseStorage.getInstance().getReference();
 
         view = getView();
 
-        avatar = actionBarView.findViewById(R.id.avatar);
 
-    // set up friend list
+        // set up friend list
         friendListView = view.findViewById(R.id.friendList);
         friendList = new ArrayList<>();
         friendListAdapter = new FriendListAdapter(friendList);
@@ -122,7 +138,7 @@ public class MainFragment extends Fragment {
         friendListView.addItemDecoration(divider_friend_list);
         friendListView.setAdapter(friendListAdapter);
 
-    //set up chat list
+        //set up chat list
         DividerItemDecoration divider_chat_list =
                 new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL);
         divider_chat_list.
@@ -240,6 +256,8 @@ public class MainFragment extends Fragment {
                                     int position = chatListAdapter.getPositionById(newChat.username);
                                     if (position == -1) {
                                         chatList.add(newChat);
+                                    }else{
+                                        chatListAdapter.newMessage(position);
                                     }
                                     chatListAdapter.notifyDataSetChanged();
                                 }
