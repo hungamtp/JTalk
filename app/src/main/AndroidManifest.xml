@@ -15,7 +15,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.JTalk">
         <activity android:name=".ResetPasswordActivity"></activity>
-        <activity android:name=".MainActivity" android:theme="@style/MainTheme"/>
+        <activity android:name=".MainActivity" android:theme="@style/MainTheme" />
         <activity
             android:name=".LoginActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"

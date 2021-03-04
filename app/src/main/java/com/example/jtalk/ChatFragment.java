@@ -13,6 +13,7 @@ import androidx.navigation.Navigation;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
@@ -60,6 +61,8 @@ public class ChatFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        // resize when keyboard appear
+        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN |  WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         return inflater.inflate(R.layout.fragment_chat, container, false);
     }
 
@@ -67,6 +70,7 @@ public class ChatFragment extends Fragment {
     public void onStart() {
         super.onStart();
         view = getView();
+
         initView();
         loadAvatar();
         loadMessage();
@@ -101,6 +105,8 @@ public class ChatFragment extends Fragment {
         ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayShowCustomEnabled(true);
         ((AppCompatActivity) getActivity()).getSupportActionBar().setCustomView(R.layout.action_bar_chat_fragment);
         actionbar = ((AppCompatActivity) getActivity()).getSupportActionBar().getCustomView();
+        actionbar.setKeepScreenOn(false);
+
 
         // action bar view
         avatar = actionbar.findViewById(R.id.avatar);

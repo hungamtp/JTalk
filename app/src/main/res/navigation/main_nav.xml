@@ -55,6 +55,9 @@
         <action
             android:id="@+id/searchToMain"
             app:destination="@id/mainFragment" />
+        <argument
+            android:name="username"
+            app:argType="string" />
     </fragment>
 
 

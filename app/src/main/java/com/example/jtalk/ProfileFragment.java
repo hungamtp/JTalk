@@ -108,7 +108,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         done.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                done();
+                updateProfile();
             }
         });
 
@@ -188,7 +188,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         getActivity().finish();
     }
 
-    private void done() {
+    private void updateProfile() {
         if (isAvatarChanged) {
             databaseReference.child("Users").child(usernameStr).child("image").setValue(true);
             avatar.setDrawingCacheEnabled(true);

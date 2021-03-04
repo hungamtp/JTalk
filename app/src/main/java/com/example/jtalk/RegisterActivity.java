@@ -27,7 +27,7 @@ import com.google.firebase.database.ValueEventListener;
 
 public class RegisterActivity extends AppCompatActivity implements View.OnClickListener {
     Button btRegister;
-    EditText username ,email ,  password , repassword;
+    EditText username, email, password, repassword;
     ProgressBar progressBar;
     FirebaseAuth mAuth;
     DatabaseReference databaseReference;
@@ -53,7 +53,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.btRegister:
                 progressBar.setVisibility(View.VISIBLE);
                 register();
@@ -67,7 +67,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         String passwordstr = password.getText().toString().trim();
         String repasswordstr = repassword.getText().toString();
 
-        if(usernamestr.isEmpty()){
+        if (usernamestr.isEmpty()) {
             username.setError("Username must be filled");
             username.requestFocus();
             return;
@@ -82,7 +82,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                if(dataSnapshot.exists()){
+                if (dataSnapshot.exists()) {
                     username.setError("username exist");
                     return;
                 }
@@ -94,62 +94,55 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
             }
         });
 
+        if (!Patterns.EMAIL_ADDRESS.matcher(emailstr).matches()) {
+            email.setError("example@gmail.com");
+            email.requestFocus();
+            return;
+        }
+        if (passwordstr.isEmpty()) {
+            password.setError("Password must be filled");
+            password.requestFocus();
+            return;
+        }
+        if (passwordstr.length() < 8) {
+            password.setError("Password have to have more 8 char");
+            return;
+        }
 
+        if (!passwordstr.equals(repasswordstr)) {
+            password.setError("Password is not matched");
+            return;
+        }
 
-        if(emailstr.isEmpty()){
+        if (emailstr.isEmpty()) {
             email.setError("Email must be filled");
             email.requestFocus();
             return;
         }
 
-        if(!Patterns.EMAIL_ADDRESS.matcher(emailstr).matches()){
-            email.setError("example@gmail.com");
-            email.requestFocus();
-            return;
-        }
-        if(passwordstr.isEmpty()){
-            password.setError("Password must be filled");
-            password.requestFocus();
-            return;
-        }
-        if(passwordstr.length() < 8){
-            password.setError("Password have to have more 8 char");
-            return;
-        }
-
-        if(!passwordstr.equals(repasswordstr)){
-            password.setError("Password is not matched");
-            return;
-        }
-
-
-
-
-        mAuth.createUserWithEmailAndPassword(emailstr , passwordstr).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+        mAuth.createUserWithEmailAndPassword(emailstr, passwordstr).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
-                if(task.isSuccessful()){
-                    User newUser = new User(emailstr   , usernamestr , passwordstr , "" , false );
+                if (task.isSuccessful()) {
+                    User newUser = new User(emailstr, usernamestr, passwordstr, "", false);
                     FirebaseDatabase.getInstance().getReference("Users")
                             .child(usernamestr)
                             .setValue(newUser)
                             .addOnCompleteListener(new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-                            if(task.isSuccessful()){
-                                startActivity(new Intent(RegisterActivity.this , LoginActivity.class));
-                                finish();
-                            }
-                        }
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    if (task.isSuccessful()) {
+                                        startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
+                                    }
+                                }
 
-                    });
-                }
-                else{
+                            });
+                } else {
                     email.setError("Email existed");
-                    try{
+                    try {
                         throw task.getException();
-                    }catch (FirebaseAuthUserCollisionException existEmail){
-                            email.setError("Email existed");
+                    } catch (FirebaseAuthUserCollisionException existEmail) {
+                        email.setError("Email existed");
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -165,5 +158,11 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     protected void onPause() {
         super.onPause();
         progressBar.setVisibility(View.INVISIBLE);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        finish();
     }
 }

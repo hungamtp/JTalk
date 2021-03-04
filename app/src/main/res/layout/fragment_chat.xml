@@ -17,6 +17,7 @@
         android:layout_gravity="fill"
         android:background="@color/white"
         android:divider="@color/white"
+        android:stackFromBottom="true"
         android:dividerHeight="10dp" />
 
     <LinearLayout

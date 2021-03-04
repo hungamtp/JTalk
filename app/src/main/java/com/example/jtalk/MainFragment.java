@@ -105,7 +105,9 @@ public class MainFragment extends Fragment {
         search_bar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Navigation.findNavController(view).navigate(R.id.mainToSearch);
+                MainFragmentDirections.MainToSearch mainToSearch = MainFragmentDirections.mainToSearch(username);
+                mainToSearch.setUsername(username);
+                navController.navigate(mainToSearch);
             }
         });
 
