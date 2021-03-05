@@ -58,6 +58,9 @@
         <argument
             android:name="username"
             app:argType="string" />
+        <action
+            android:id="@+id/searchToChat"
+            app:destination="@id/chatFragment" />
     </fragment>
 
 

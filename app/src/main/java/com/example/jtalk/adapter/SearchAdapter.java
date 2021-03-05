@@ -51,7 +51,9 @@ public class SearchAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         View userView;
+        TextView name;
         User user = (User) getItem(position);
+        CircleImageView avatar;
 
         if (convertView == null) {
             userView = View.inflate(parent.getContext(), R.layout.friend_item_search_fragment, null);
@@ -60,9 +62,11 @@ public class SearchAdapter extends BaseAdapter {
         }
 
         // binding data
-        ((TextView) userView.findViewById(R.id.username)).setText(user.username);
+        name =(TextView) userView.findViewById(R.id.username);
+        name.setText(user.username);
         if(!user.avatar.equals("")){
-            Glide.with(parent.getContext()).load(user.avatar).into((CircleImageView) userView.findViewById(R.id.avatar));
+            avatar =(CircleImageView) userView.findViewById(R.id.avatar);
+            Glide.with(parent.getContext()).load(user.avatar).into(avatar);
         }
 
         return userView;
@@ -88,6 +92,8 @@ public class SearchAdapter extends BaseAdapter {
         }
         notifyDataSetChanged();
     }
+
+
 
 
 }
