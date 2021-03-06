@@ -28,6 +28,8 @@
 
         <EditText
             android:id="@+id/message"
+            android:inputType="text"
+            android:maxLines="1"
             android:layout_width="350dp"
             android:layout_height="50dp" />
 

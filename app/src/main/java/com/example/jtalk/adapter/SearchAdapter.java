@@ -79,11 +79,11 @@ public class SearchAdapter extends BaseAdapter {
     }
 
     public void filter(String searchText) {
-
+        resultList.clear();
         if (searchText.isEmpty() || searchText.equals("")) {
             resultList.addAll(userList);
         } else {
-            resultList.clear();
+
             for (User user : userList) {
                 if (user.username.toLowerCase().contains(searchText.toLowerCase())) {
                     resultList.add(user);

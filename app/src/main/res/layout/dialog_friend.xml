@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="100dp"
+    android:layout_height="60dp"
     android:background="@drawable/pop_up"
     android:padding="5dp">
 
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/avatar"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
         android:layout_alignParentLeft="true"
         android:src="@drawable/ic_baseline_person_outline_24" />
 
@@ -43,6 +43,7 @@
         android:id="@+id/add_friend"
         android:layout_width="50dp"
         android:layout_height="50dp"
+        android:visibility="invisible"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
         android:padding="10dp"

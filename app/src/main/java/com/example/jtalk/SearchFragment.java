@@ -11,6 +11,8 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -40,6 +42,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class SearchFragment extends Fragment implements SearchView.OnQueryTextListener {
     DatabaseReference databaseReference;
+    String[] friendList;
     String username;
     ListView userListView;
     List<User> userList;
@@ -67,38 +70,47 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String friendName = userList.get(position).username;
                 showDialog(friendName);
-                searchAdapter.getView(position , view , parent);
+                searchAdapter.getView(position, view, parent);
             }
         });
 
     }
-    void showDialog(String friendName){
+
+    void showDialog(String friendName) {
         dialog.setContentView(R.layout.dialog_friend);
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         dialog.getWindow().setGravity(Gravity.BOTTOM);
         dialog.show();
 
         //  init view in dialog
-        TextView name  =dialog.findViewById(R.id.name);
+        TextView name = dialog.findViewById(R.id.name);
         CircleImageView avatar = dialog.findViewById(R.id.avatar);
         ImageView addFriend = dialog.findViewById(R.id.add_friend);
         ImageView text = dialog.findViewById(R.id.text);
 
         name.setText(friendName);
 
+        if (!isFriend(friendName)) {
+            addFriend.setVisibility(View.VISIBLE);
+            addFriend.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(v.getContext(), "add friend", Toast.LENGTH_LONG).show();
+                    databaseReference.child("Users").child(username).child("Friends").push().setValue(friendName);
+                    addFriend.setVisibility(View.INVISIBLE);
 
-
-        addFriend.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                databaseReference.child("Users").child(username).child("Friends").push().setValue(friendName);
-            }
-        });
+                }
+            });
+        }
 
         text.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
+                final NavController navController = Navigation.findNavController(getView());
+                SearchFragmentDirections.SearchToChat searchToChat = SearchFragmentDirections.searchToChat(username, friendName);
+                dialog.dismiss();
+                navController.navigate(searchToChat);
             }
         });
 
@@ -148,24 +160,6 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
         });
     }
 
-    boolean isFriend(String username, String friendname) {
-        boolean result = true;
-        databaseReference.child("Users").child(username).child("Friends").child(friendname).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (snapshot.exists()) {
-
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-
-        return false;
-    }
 
     private void initView() {
         View view = getView();
@@ -182,12 +176,22 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
         userListView.setAdapter(searchAdapter);
     }
 
+    boolean isFriend(String friendName) {
+        for (int i = 0; i < friendList.length; i++) {
+            if (friendName.equals(friendList[i])) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
         if (getArguments() != null) {
             SearchFragmentArgs args = SearchFragmentArgs.fromBundle(getArguments());
+            friendList = args.getFriendList();
             username = args.getUsername();
         }
 

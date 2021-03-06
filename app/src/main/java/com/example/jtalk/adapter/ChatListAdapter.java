@@ -59,6 +59,17 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.ViewHo
 //
     }
 
+    public void updateNewMessage(int position) {
+        Chat temp = friendList.get(position);
+        for (int i = position; i >= 1; i--) {
+            friendList.set(i, friendList.get(i - 1));
+        }
+
+        friendList.set(0, temp);
+
+    }
+
+
     public int getPositionById(String username) {
         int index = 0;
         for (User x : friendList) {
@@ -69,37 +80,11 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.ViewHo
         return -1;
     }
 
-    public boolean checkUser(String username) {
-        boolean result = false;
-        for (User friend : friendList) {
-            if (friend.username.equals(username)) {
-                result = true;
-                break;
-            }
-        }
-        return result;
-    }
 
     @Override
     public int getItemCount() {
         return friendList.size();
     }
-
-    public String getItemUsername(int position) {
-        return friendList.get(position).username;
-    }
-    public void newMessage(int oldPosition){
-
-        for(int i = oldPosition ; i >= 1 ; i--){
-            friendList.set(i, friendList.get(i-1));
-        }
-        friendList.set(0 , friendList.get(oldPosition));
-
-    }
-
-//    public TextView getLastMessage(){
-//        return ViewHolder.lastMessage;
-//    }
 
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -128,9 +113,8 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.ViewHo
             online = itemView.findViewById(R.id.online);
 
         }
-        public TextView getLastMessage(){
-            return lastMessage;
-        }
+
+
     }
 
 }

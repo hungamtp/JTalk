@@ -105,7 +105,13 @@ public class MainFragment extends Fragment {
         search_bar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                String[] friendNameList = new String[friendList.size()];
                 MainFragmentDirections.MainToSearch mainToSearch = MainFragmentDirections.mainToSearch(username);
+
+                for(int  i  = 0 ; i < friendList.size() ; i ++){
+                    friendNameList[i] = friendList.get(i).username;
+                }
+                mainToSearch.setFriendList(friendNameList);
                 mainToSearch.setUsername(username);
                 navController.navigate(mainToSearch);
             }
@@ -259,7 +265,7 @@ public class MainFragment extends Fragment {
                                     if (position == -1) {
                                         chatList.add(newChat);
                                     }else{
-                                        chatListAdapter.newMessage(position);
+                                        chatListAdapter.updateNewMessage(position);
                                     }
                                     chatListAdapter.notifyDataSetChanged();
                                 }

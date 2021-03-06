@@ -45,7 +45,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         // auto log
         username.setText("hungamtp");
         password.setText("hunghung");
-        btLogin.callOnClick();
+       // btLogin.callOnClick();
 
 
     }

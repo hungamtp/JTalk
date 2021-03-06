@@ -61,6 +61,11 @@
         <action
             android:id="@+id/searchToChat"
             app:destination="@id/chatFragment" />
+        <argument
+            android:name="friendList"
+            app:argType="string[]"
+            app:nullable="true"
+            android:defaultValue="@null" />
     </fragment>
 
 
