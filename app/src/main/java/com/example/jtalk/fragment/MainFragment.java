@@ -1,4 +1,4 @@
-package com.example.jtalk;
+package com.example.jtalk.fragment;
 
 import android.app.Dialog;
 import android.content.Intent;
@@ -24,6 +24,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.example.jtalk.R;
 import com.example.jtalk.adapter.ChatListAdapter;
 import com.example.jtalk.adapter.FriendListAdapter;
 import com.example.jtalk.model.Chat;

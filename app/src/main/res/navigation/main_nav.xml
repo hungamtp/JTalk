@@ -7,23 +7,23 @@
 
     <fragment
         android:id="@+id/mainFragment"
-        android:name="com.example.jtalk.MainFragment"
+        android:name="com.example.jtalk.fragment.MainFragment"
         android:label="MainFragment" >
         <action
             android:id="@+id/mainToProfile"
             app:destination="@id/profileFragment"
-            app:enterAnim="@android:anim/slide_out_right"
-            app:exitAnim="@android:anim/slide_in_left" />
+            app:enterAnim="@android:anim/slide_in_left" />
         <action
             android:id="@+id/mainToChat"
-            app:destination="@id/chatFragment" />
+            app:destination="@id/chatFragment"
+            app:enterAnim="@anim/fragment_close_exit" />
         <action
             android:id="@+id/mainToSearch"
             app:destination="@id/searchFragment" />
     </fragment>
     <fragment
         android:id="@+id/profileFragment"
-        android:name="com.example.jtalk.ProfileFragment"
+        android:name="com.example.jtalk.fragment.ProfileFragment"
         android:label="ProfileFragment" >
         <argument
             android:name="username"
@@ -31,16 +31,16 @@
         <action
             android:id="@+id/profileToMain"
             app:destination="@id/mainFragment"
-            app:enterAnim="@android:anim/slide_in_left"
-            app:exitAnim="@android:anim/slide_out_right" />
+            app:enterAnim="@android:anim/slide_in_left" />
     </fragment>
     <fragment android:id="@+id/chatFragment"
-        android:name="com.example.jtalk.ChatFragment"
+        android:name="com.example.jtalk.fragment.ChatFragment"
         android:label="ChatFragment">
 
         <action
             android:id="@+id/chatToMain"
-            app:destination="@id/mainFragment" />
+            app:destination="@id/mainFragment"
+            app:enterAnim="@anim/fragment_close_enter" />
         <argument
             android:name="sender"
             app:argType="string" />
@@ -49,7 +49,7 @@
             app:argType="string" />
     </fragment>
     <fragment android:id="@+id/searchFragment"
-        android:name="com.example.jtalk.SearchFragment"
+        android:name="com.example.jtalk.fragment.SearchFragment"
         android:label="SearchFragment">
 
         <action

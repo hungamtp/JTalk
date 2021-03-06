@@ -1,4 +1,4 @@
-package com.example.jtalk;
+package com.example.jtalk.fragment;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -23,6 +23,8 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
 import com.bumptech.glide.Glide;
+import com.example.jtalk.LoginActivity;
+import com.example.jtalk.R;
 import com.example.jtalk.model.User;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;

@@ -15,8 +15,9 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.example.jtalk.MainFragmentDirections;
+
 import com.example.jtalk.R;
+import com.example.jtalk.fragment.MainFragmentDirections;
 import com.example.jtalk.model.User;
 
 import java.util.List;

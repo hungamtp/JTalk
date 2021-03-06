@@ -1,4 +1,4 @@
-package com.example.jtalk;
+package com.example.jtalk.fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -22,6 +22,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+
+import com.example.jtalk.R;
 import com.example.jtalk.adapter.MessageAdapter;
 import com.example.jtalk.model.Message;
 import com.google.firebase.database.ChildEventListener;
@@ -41,7 +43,7 @@ public class ChatFragment extends Fragment {
     ArrayList<Message> messagesList;
     ListView messageListView;
     MessageAdapter messageAdapter;
-    Button btnSend;
+    ImageView btnSend;
     EditText message;
     ImageView back;
     ImageView avatar;
@@ -62,7 +64,7 @@ public class ChatFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // resize when keyboard appear
-        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN |  WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE |  WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         return inflater.inflate(R.layout.fragment_chat, container, false);
     }
 
@@ -105,6 +107,7 @@ public class ChatFragment extends Fragment {
         ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayShowCustomEnabled(true);
         ((AppCompatActivity) getActivity()).getSupportActionBar().setCustomView(R.layout.action_bar_chat_fragment);
         actionbar = ((AppCompatActivity) getActivity()).getSupportActionBar().getCustomView();
+        actionbar.bringToFront();
         actionbar.setKeepScreenOn(false);
 
 

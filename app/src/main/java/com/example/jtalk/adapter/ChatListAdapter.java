@@ -3,6 +3,7 @@ package com.example.jtalk.adapter;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,11 +13,12 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.example.jtalk.MainFragmentDirections;
 import com.example.jtalk.R;
+import com.example.jtalk.fragment.MainFragmentDirections;
 import com.example.jtalk.model.Chat;
 import com.example.jtalk.model.User;
 
@@ -61,6 +63,7 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.ViewHo
 
     public void updateNewMessage(int position) {
         Chat temp = friendList.get(position);
+
         for (int i = position; i >= 1; i--) {
             friendList.set(i, friendList.get(i - 1));
         }
@@ -113,6 +116,13 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.ViewHo
             online = itemView.findViewById(R.id.online);
 
         }
+//        public void  updateNewMessage(){
+//
+//            username.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
+//            lastMessage.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
+//        }
+
+
 
 
     }

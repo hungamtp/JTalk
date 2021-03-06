@@ -1,4 +1,4 @@
-package com.example.jtalk;
+package com.example.jtalk.fragment;
 
 import android.app.Dialog;
 import android.graphics.Color;
@@ -25,6 +25,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.example.jtalk.R;
 import com.example.jtalk.adapter.SearchAdapter;
 import com.example.jtalk.model.User;
 import com.google.firebase.database.ChildEventListener;
@@ -84,7 +85,7 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 User user = snapshot.getValue(User.class);
-                if(!user.avatar.equals("")) {
+                if (!user.avatar.equals("")) {
                     Glide.with(getContext()).load(user.avatar).into((CircleImageView) dialog.findViewById(R.id.avatar));
                 }
             }
