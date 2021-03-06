@@ -146,9 +146,11 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
             public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
                 if (snapshot.exists()) {
                     User user = snapshot.getValue(User.class);
-                    userList.add(user);
-                    searchAdapter.getUserList().add(user);
-                    searchAdapter.notifyDataSetChanged();
+                    if (!user.username.equals(username)) {
+                        userList.add(user);
+                        searchAdapter.getUserList().add(user);
+                        searchAdapter.notifyDataSetChanged();
+                    }
                 }
             }
 
