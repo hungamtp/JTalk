@@ -73,7 +73,6 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
                 searchAdapter.getView(position, view, parent);
             }
         });
-
     }
 
     void showDialog(String friendName) {
@@ -81,6 +80,20 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         dialog.getWindow().setGravity(Gravity.BOTTOM);
         dialog.show();
+        databaseReference.child("Users").child(friendName).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                User user = snapshot.getValue(User.class);
+                if(!user.avatar.equals("")) {
+                    Glide.with(getContext()).load(user.avatar).into((CircleImageView) dialog.findViewById(R.id.avatar));
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
 
         //  init view in dialog
         TextView name = dialog.findViewById(R.id.name);

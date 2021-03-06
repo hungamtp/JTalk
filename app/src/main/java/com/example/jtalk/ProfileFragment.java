@@ -188,6 +188,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         getActivity().finish();
     }
 
+
     private void updateProfile() {
         if (isAvatarChanged) {
             databaseReference.child("Users").child(usernameStr).child("image").setValue(true);
