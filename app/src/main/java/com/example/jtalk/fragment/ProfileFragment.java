@@ -29,22 +29,26 @@ import com.example.jtalk.model.User;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class ProfileFragment extends Fragment implements View.OnClickListener {
     FirebaseStorage storage;
     DatabaseReference databaseReference;
     StorageReference storageReference;
 
+    TextView friend;
     TextView username;
     TextView email;
     TextView changPassword;
@@ -81,6 +85,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         v = getView();
         initView();
         loadProfile();
+        getFriendCount();
 
     }
 
@@ -97,6 +102,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         back = actionbar.findViewById(R.id.back);
 
         // init view
+        friend = v.findViewById(R.id.number_friend);
         changPassword = v.findViewById(R.id.change_password);
         username = v.findViewById(R.id.username);
         avatar = v.findViewById(R.id.avatar);
@@ -132,6 +138,39 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
 
 
     }
+
+    void getFriendCount(){
+        final AtomicInteger increase = new AtomicInteger();
+        Query query = databaseReference.child("Users").child(usernameStr).child("friends");
+        query.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                    int count = increase.incrementAndGet();
+                friend.setText("Friend: "+count+"");
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot snapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
 
     void loadProfile() {
         // check avatar exist

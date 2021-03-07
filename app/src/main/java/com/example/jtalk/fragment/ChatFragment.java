@@ -65,6 +65,7 @@ public class ChatFragment extends Fragment {
                              Bundle savedInstanceState) {
         // resize when keyboard appear
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE |  WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+
         return inflater.inflate(R.layout.fragment_chat, container, false);
     }
 
