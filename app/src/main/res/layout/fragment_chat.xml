@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:paddingLeft="10dp">
 
 
@@ -16,6 +17,18 @@
         android:scrollbars="none"
         android:stackFromBottom="true" />
 
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/heart_icon"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:padding="5dp"
+        android:src="@drawable/heart"
+        android:background="@drawable/icon_background"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="10dp"
+        android:layout_marginRight="10dp"
+
+        android:layout_above="@+id/bottom"/>
 
     <RelativeLayout
         android:id="@+id/bottom"
@@ -23,15 +36,23 @@
         android:layout_height="50dp"
         android:layout_alignParentBottom="true"
         android:orientation="horizontal">
+
         <EditText
-            android:id="@+id/message"
+            android:id="@+id/send_message"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@null"
-            android:inputType="text"
             android:hint="sendlove ....."
+            android:inputType="text"
             android:maxLines="1" />
-
+        <ImageView
+            android:id="@+id/image_icon"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_toLeftOf="@+id/btnSend"
+            android:layout_gravity="right"
+            android:padding="10dp"
+            android:src="@drawable/image_icon" />
         <ImageView
             android:id="@+id/btnSend"
             android:layout_width="50dp"

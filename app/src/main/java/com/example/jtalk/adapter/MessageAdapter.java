@@ -1,5 +1,6 @@
 package com.example.jtalk.adapter;
 
+import android.media.Image;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -50,10 +51,26 @@ public class MessageAdapter extends BaseAdapter {
         Message message = (Message) getItem(position);
         if (convertView == null) {
             if (getItemViewType(position) == SENDER) {
-                messageView = View.inflate(parent.getContext(), R.layout.message_view_of_sender, null);
+                if(message.isImage){
+                    messageView = View.inflate(parent.getContext(), R.layout.image_message, null);
+                    Glide.with(messageView.getContext()).load(message.message).into((ImageView) messageView.findViewById(R.id.image));
+
+                }else{
+                    messageView = View.inflate(parent.getContext(), R.layout.message_view_of_sender, null);
+                    ((TextView) messageView.findViewById(R.id.message)).setText(String.format("%s", message.message));
+                }
+
 
             } else {
-                messageView = View.inflate(parent.getContext(), R.layout.message_view_of_receiver, null);
+                if(message.isImage){
+                    messageView = View.inflate(parent.getContext(), R.layout.image_message_of_receiver, null);
+                    Glide.with(messageView.getContext()).load(message.message).into((ImageView) messageView.findViewById(R.id.image));
+                }else{
+                    messageView = View.inflate(parent.getContext(), R.layout.message_view_of_receiver, null);
+                    ((TextView) messageView.findViewById(R.id.message)).setText(String.format("%s", message.message));
+
+                }
+
                 DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
                 databaseReference.child("Users").child(message.sender).child("avatar").addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
@@ -72,7 +89,7 @@ public class MessageAdapter extends BaseAdapter {
         } else messageView = convertView;
 
 
-        ((TextView) messageView.findViewById(R.id.message)).setText(String.format("%s", message.message));
+
         return messageView;
     }
 

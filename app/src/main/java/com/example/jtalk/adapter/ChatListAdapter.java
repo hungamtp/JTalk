@@ -45,7 +45,12 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.ViewHo
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Chat chat = friendList.get(position);
         holder.username.setText(chat.username);
-        holder.lastMessage.setText(chat.lastMessages);
+        if(chat.lastMessages.contains("https://firebasestorage.googleapis.com/")){
+            holder.lastMessage.setText("image");
+        }else{
+            holder.lastMessage.setText(chat.lastMessages);
+        }
+
 
         if (chat.online) {
             // set image when is online

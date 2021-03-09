@@ -225,14 +225,9 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         startActivityForResult(intent, REQUEST_CODE);
     }
 
-    private void cancel() {
-        getActivity().finish();
-    }
-
 
     private void updateProfile() {
         if (isAvatarChanged) {
-            databaseReference.child("Users").child(usernameStr).child("image").setValue(true);
             avatar.setDrawingCacheEnabled(true);
             avatar.buildDrawingCache();
             storageReference = FirebaseStorage.getInstance().getReference().child("avatar/" + usernameStr + ".jpg");

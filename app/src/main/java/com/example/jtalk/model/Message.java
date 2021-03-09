@@ -3,6 +3,7 @@ package com.example.jtalk.model;
 public class Message {
     public String receiver , sender , message;
     public boolean isSender;
+    public boolean isImage;
     public boolean isRead;
 
 
@@ -16,6 +17,13 @@ public class Message {
         this.sender = sender;
         this.message = message;
         this.isSender = isSender;
+    }
+    public Message(String sender, String receiver, String message , boolean isSender, boolean isImage) {
+        this.receiver = receiver;
+        this.sender = sender;
+        this.message = message;
+        this.isSender = isSender;
+        this.isImage = isImage;
     }
 
     public String getReceiver() {
