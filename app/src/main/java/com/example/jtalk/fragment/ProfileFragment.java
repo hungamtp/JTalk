@@ -10,8 +10,13 @@ import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.view.animation.TranslateAnimation;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,6 +29,7 @@ import androidx.navigation.Navigation;
 
 import com.bumptech.glide.Glide;
 import com.example.jtalk.LoginActivity;
+import com.example.jtalk.MainActivity;
 import com.example.jtalk.R;
 import com.example.jtalk.model.User;
 import com.google.android.gms.tasks.Continuation;
@@ -44,6 +50,9 @@ import java.io.ByteArrayOutputStream;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class ProfileFragment extends Fragment implements View.OnClickListener {
+
+    boolean CHANGE_PASSWORD_FORM_IS_SHOWN = false;
+
     FirebaseStorage storage;
     DatabaseReference databaseReference;
     StorageReference storageReference;
@@ -52,10 +61,14 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
     TextView username;
     TextView email;
     TextView changPassword;
+    EditText currentPassword;
+    EditText newPassword;
+    TextView btSave;
     TextView done;
     ImageView back;
     ImageView avatar;
     Button signOut;
+    ProgressBar save_progress;
 
     String usernameStr;
     View v;
@@ -108,10 +121,17 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         avatar = v.findViewById(R.id.avatar);
         email = v.findViewById(R.id.email);
         signOut = v.findViewById(R.id.sign_out);
+        currentPassword = v.findViewById(R.id.current_password);
+        newPassword = v.findViewById(R.id.new_password);
+        btSave = v.findViewById(R.id.bt_save);
+        save_progress = v.findViewById(R.id.save_progress);
 
         // set on click
         avatar.setOnClickListener(this::onClick);
         signOut.setOnClickListener(this::onClick);
+        changPassword.setOnClickListener(this::onClick);
+        btSave.setOnClickListener(this::onClick);
+
 
         done.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -128,25 +148,22 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         });
 
 
-
         // set up firebase
         storageReference = FirebaseStorage.getInstance().getReference();
         databaseReference = FirebaseDatabase.getInstance().getReference();
         storage = FirebaseStorage.getInstance("gs://timer-34f5a.appspot.com");
 
 
-
-
     }
 
-    void getFriendCount(){
+    void getFriendCount() {
         final AtomicInteger increase = new AtomicInteger();
         Query query = databaseReference.child("Users").child(usernameStr).child("friends");
         query.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-                    int count = increase.incrementAndGet();
-                friend.setText("Friend: "+count+"");
+                int count = increase.incrementAndGet();
+                friend.setText("Friend: " + count + "");
             }
 
             @Override
@@ -205,7 +222,67 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
             case R.id.sign_out:
                 signOut();
                 break;
+            case R.id.change_password:
+                moveDown();
+                break;
+            case R.id.bt_save:
+                changPassword();
+                break;
+
         }
+
+    }
+
+    private void moveDown() {
+        Animation hide;
+        hide = new AnimationUtils().loadAnimation(v.getContext(), R.anim.hide);
+        Animation show;
+        show = new AnimationUtils().loadAnimation(v.getContext(), R.anim.show);
+        currentPassword.setVisibility(View.VISIBLE);
+        newPassword.setVisibility(View.VISIBLE);
+        btSave.setVisibility(View.VISIBLE);
+
+        changPassword.setVisibility(View.INVISIBLE);
+
+    }
+
+    private void changPassword() {
+        save_progress.setVisibility(View.VISIBLE);
+        btSave.setVisibility(View.INVISIBLE);
+
+
+        Query query = databaseReference.child("Users").orderByChild("password").equalTo(currentPassword.getText().toString().trim());
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    databaseReference.child("Users").child(usernameStr).child("password").setValue(newPassword.getText().toString().trim()).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+
+                            Toast.makeText(v.getContext(), "password changed successfully", Toast.LENGTH_SHORT).show();
+                            Animation animation = AnimationUtils.loadAnimation(v.getContext(), R.anim.hide);
+
+                            currentPassword.setVisibility(View.INVISIBLE);
+                            newPassword.setVisibility(View.INVISIBLE);
+                            save_progress.setVisibility(View.INVISIBLE);
+                            changPassword.setVisibility(View.VISIBLE);
+                        }
+                    });
+
+                } else {
+                    currentPassword.setError("wrong password");
+                    btSave.setVisibility(View.VISIBLE);
+                    save_progress.setVisibility(View.INVISIBLE);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
 
     }
 

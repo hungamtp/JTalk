@@ -82,7 +82,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 login();
                 break;
             case R.id.forgot:
-                forgotPassword();
+                Toast.makeText(LoginActivity.this , "Undone function" , Toast.LENGTH_SHORT).show();
                 break;
         }
     }
